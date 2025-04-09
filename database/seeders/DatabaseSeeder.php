@@ -2,22 +2,28 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use \App\Models\Kategori;
+use App\Models\Produk;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // $this->call([KategoriSeeder::class]);
+        // Produk::factory()->count(50)->create();
+
+        DB::table('users')->insert([
+            [
+                'user_nama' => 'admin',
+                'user_pass' => Hash::make('admin'),
+                'user_hak' => 'admin',
+                'user_sts' => '1'
+            ],
         ]);
     }
 }
