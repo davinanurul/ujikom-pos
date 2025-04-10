@@ -44,13 +44,15 @@
             <div class="brand-logo">
                 <a href="index.html" style="display: flex; align-items: center; text-decoration: none;">
                     <b class="logo-abbr" style="font-size: 22px; color: white; font-weight: bold;">POS</b>
-                    <span class="logo-compact" style="margin-left: 10px; font-size: 18px; color: white; font-weight: 500;">P.O.S</span>
-                    <span class="brand-title" style="margin-left: 10px; font-size: 20px; color: white; font-weight: bold;">
+                    <span class="logo-compact"
+                        style="margin-left: 10px; font-size: 18px; color: white; font-weight: 500;">P.O.S</span>
+                    <span class="brand-title"
+                        style="margin-left: 10px; font-size: 20px; color: white; font-weight: bold;">
                         POINT OF SALES
                     </span>
                 </a>
             </div>
-        </div>        
+        </div>
         <!--**********************************
             Nav header end
         ***********************************-->
@@ -238,29 +240,39 @@
                                             <a href="page-lock.html"><i class="icon-lock"></i> <span>Lock
                                                     Screen</span></a>
                                         </li>
-                                        <li><a href="page-login.html"><i class="icon-key"></i> <span>Logout</span></a>
+                                        <li>
+                                            <a href="javascript:void(0)" id="logout-button">
+                                                <i class="icon-key"></i> <span>Logout</span>
+                                            </a>
                                         </li>
-                                    </ul>
-                                </div>
-                            </div>
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                            style="display: none;">
+                                            @csrf
+                                        </form>
+
                         </li>
                     </ul>
                 </div>
             </div>
+            </li>
+            </ul>
         </div>
-        <!--**********************************
+    </div>
+    </div>
+    <!--**********************************
             Header end ti-comment-alt
         ***********************************-->
 
-        <!--**********************************
+    <!--**********************************
             Sidebar start
         ***********************************-->
-        <div class="nk-sidebar">
-            <div class="nk-nav-scroll">
-                <ul class="metismenu" id="menu" style="margin-top: 20px">
+    <div class="nk-sidebar">
+        <div class="nk-nav-scroll">
+            <ul class="metismenu" id="menu" style="margin-top: 20px">
+                @if (Auth::user()->user_hak === 'admin')
                     <li>
                         <a class="has-arrow" href="{{ route('dashboard') }}" aria-expanded="false">
-                            <i class="icon-speedometer menu-icon"></i><span class="nav-text">Dashboard</span>
+                            <i class="icon-home menu-icon"></i><span class="nav-text">Dashboard</span>
                         </a>
                     </li>
                     <li class="mega-menu mega-menu-sm">
@@ -275,62 +287,82 @@
                     </li>
                     <li class="mega-menu mega-menu-sm">
                         <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="icon-globe-alt menu-icon"></i><span class="nav-text">Transaksi</span>
+                            <i class="icon-basket menu-icon"></i><span class="nav-text">Transaksi</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="{{ route('transaksi.create') }}">Penjualan</a>
-                            <li><a  href="{{ route('penerimaan_barang.index') }}">Penerimaan Barang</a>
+                            {{-- create transaksi disembunyikan untuk admin --}}
+                            <li><a href="{{ route('penerimaan_barang.index') }}">Penerimaan Barang</a></li>
                         </ul>
                     </li>
                     <li class="mega-menu mega-menu-sm">
                         <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="icon-globe-alt menu-icon"></i><span class="nav-text">Laporan</span>
+                            <i class="icon-docs menu-icon"></i><span class="nav-text">Laporan</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="{{ route('transaksi.index') }}">Daftar Transaksi</a>
-                            <li><a href="{{ route('produk_varian.index') }}">Varian Produk</a>
+                            <li><a href="{{ route('transaksi.index') }}">Daftar Transaksi</a></li>
+                            <li><a href="{{ route('produk_varian.index') }}">Varian Produk</a></li>
                         </ul>
                     </li>
                     <li class="mega-menu mega-menu-sm">
                         <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="icon-globe-alt menu-icon"></i><span class="nav-text">Referensi</span>
+                            <i class="icon-settings menu-icon"></i><span class="nav-text">Referensi</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="{{ route('user.index') }}">User</a>
-                            <li><a href="{{ route('member.index') }}">Member</a>
-                            <li><a href="{{ route('supplier.index') }}">Supplier</a>
+                            <li><a href="{{ route('user.index') }}">User</a></li>
+                            <li><a href="{{ route('member.index') }}">Member</a></li>
+                            <li><a href="{{ route('supplier.index') }}">Supplier</a></li>
                         </ul>
                     </li>
-                </ul>
-            </div>
+                @elseif(Auth::user()->user_hak === 'kasir')
+                    <li class="mega-menu mega-menu-sm">
+                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                            <i class="icon-basket-loaded menu-icon"></i><span class="nav-text">Transaksi</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{ route('transaksi.create') }}">Penjualan</a></li>
+                            <li><a href="{{ route('penerimaan_barang.index') }}">Penerimaan Barang</a></li>
+                        </ul>
+                    </li>
+                    <li class="mega-menu mega-menu-sm">
+                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                            <i class="icon-people menu-icon"></i><span class="nav-text">Referensi</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{ route('member.index') }}">Member</a></li>
+                        </ul>
+                    </li>
+                @endif
+            </ul>
         </div>
-        <!--**********************************
+    </div>
+
+    <!--**********************************
             Sidebar end
         ***********************************-->
 
-        <!--**********************************
+    <!--**********************************
             Content body start
         ***********************************-->
-        <div class="content-body">
-            <div class="container-fluid mt-3">
-                @yield('content')
-            </div>
+    <div class="content-body">
+        <div class="container-fluid mt-3">
+            @yield('content')
         </div>
-        <!--**********************************
+    </div>
+    <!--**********************************
             Content body end
         ***********************************-->
 
 
-        <!--**********************************
+    <!--**********************************
             Footer start
         ***********************************-->
-        <div class="footer">
-            <div class="copyright">
-                <p>Copyright &copy; Designed & Developed by <a href="https://themeforest.net/user/quixlab">Quixlab</a>
-                    2018</p>
-            </div>
+    <div class="footer">
+        <div class="copyright">
+            <p>Copyright &copy; Designed & Developed by <a href="https://themeforest.net/user/quixlab">Quixlab</a>
+                2018</p>
         </div>
-        <!--**********************************
+    </div>
+    <!--**********************************
             Footer end
         ***********************************-->
     </div>
@@ -350,6 +382,7 @@
     <script src="{{ asset('asset') }}/dist/plugins/tables/js/jquery.dataTables.min.js"></script>
     <script src="{{ asset('asset') }}/dist/plugins/tables/js/datatable/dataTables.bootstrap4.min.js"></script>
     <script src="{{ asset('asset') }}/dist/plugins/tables/js/datatable-init/datatable-basic.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         (function($) {
             "use strict"
@@ -360,6 +393,25 @@
             });
 
         })(jQuery);
+    </script>
+    <script>
+        document.getElementById('logout-button').addEventListener('click', function(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Anda akan logout dari sistem.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, logout!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('logout-form').submit();
+                }
+            });
+        });
     </script>
 
 </body>
