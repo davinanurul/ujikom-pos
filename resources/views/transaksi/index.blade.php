@@ -28,6 +28,10 @@
                         <i class="fas fa-file-pdf"></i> Export PDF
                     </a>
                 </div>
+                <a href="{{ route('transactions.export') }}" class="btn btn-success">
+                    <i class="fa fa-file-excel"></i> Export Excel
+                </a>                
+                
             </div>
         </div>
 

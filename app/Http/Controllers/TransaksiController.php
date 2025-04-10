@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\TransactionsExport;
 use App\Models\Transaksi;
 use App\Models\Member;
 use App\Models\Produk;
@@ -11,6 +12,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TransaksiController extends Controller
 {
@@ -185,5 +187,10 @@ class TransaksiController extends Controller
         $detailTransaksi = $transaksi->detailTransaksi; // Ambil detail transaksi berdasarkan transaksi_id
 
         return view('transaksi.details', compact('transaksi', 'detailTransaksi'));
+    }
+
+    public function export()
+    {
+        return Excel::download(new TransactionsExport, 'transactions.xlsx');
     }
 }
