@@ -25,7 +25,7 @@ class UserController extends Controller
         $validated = $request->validate([
             'user_nama' => 'required|string|max:255|unique:users,user_nama',
             'user_pass' => 'required|string|min:5',
-            'user_hak' => 'required|string|in:admin,kasir',
+            'user_hak' => 'required|string|in:admin,kasir,owner',
         ]);
 
         $validated['user_sts'] = 1;

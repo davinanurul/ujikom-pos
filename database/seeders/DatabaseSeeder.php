@@ -19,9 +19,9 @@ class DatabaseSeeder extends Seeder
 
         DB::table('users')->insert([
             [
-                'user_nama' => 'admin',
-                'user_pass' => Hash::make('admin'),
-                'user_hak' => 'admin',
+                'user_nama' => 'owner',
+                'user_pass' => Hash::make('owner'),
+                'user_hak' => 'owner',
                 'user_sts' => '1'
             ],
         ]);
