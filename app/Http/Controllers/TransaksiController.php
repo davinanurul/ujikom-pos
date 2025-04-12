@@ -134,22 +134,6 @@ class TransaksiController extends Controller
         ]);
     }
 
-    public function getTransaksiHarian()
-    {
-        $transaksiHarian = Transaksi::getTransaksiHarian();
-
-        // Format data untuk Chart.js
-        $labels = $transaksiHarian->pluck('tanggal');
-        $jumlahTransaksi = $transaksiHarian->pluck('jumlah_transaksi');
-        $totalPendapatan = $transaksiHarian->pluck('total_pendapatan');
-
-        return response()->json([
-            'labels' => $labels,
-            'jumlah_transaksi' => $jumlahTransaksi,
-            'total_pendapatan' => $totalPendapatan,
-        ]);
-    }
-
     public function exportPDF(Request $request)
     {
         // Query data transaksi

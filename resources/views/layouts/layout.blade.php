@@ -11,6 +11,8 @@
     <!-- Custom Stylesheet -->
     <link href="{{ asset('asset') }}/dist/plugins/tables/css/datatable/dataTables.bootstrap4.min.css" rel="stylesheet">
     <link href="{{ asset('asset') }}/dist/css/style.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{{ asset('quixlab/plugins/morris/morris.css') }}">
 
 </head>
 
@@ -266,85 +268,85 @@
     <!--**********************************
             Sidebar start
         ***********************************-->
-        <div class="nk-sidebar">
-            <div class="nk-nav-scroll">
-                <ul class="metismenu" id="menu" style="margin-top: 20px">
-        
-                    {{-- DASHBOARD --}}
-                    <li>
-                        <a class="has-arrow" href="{{ route('dashboard') }}" aria-expanded="false">
-                            <i class="icon-home menu-icon"></i><span class="nav-text">Dashboard</span>
-                        </a>
-                    </li>
-        
-                    {{-- PRODUK --}}
-                    @if (in_array(Auth::user()->user_hak, ['admin', 'kasir', 'owner']))
-                        <li class="mega-menu mega-menu-sm">
-                            <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                                <i class="icon-globe-alt menu-icon"></i><span class="nav-text">Produk</span>
-                            </a>
-                            <ul aria-expanded="false">
-                                <li><a href="{{ route('kategori.index') }}">Kategori</a></li>
-                                <li><a href="{{ route('produk.index') }}">Produk</a></li>
-                                <li><a href="{{ route('pengajuanBarang.index') }}">Pengajuan Barang</a></li>
-                            </ul>
-                        </li>
-                    @endif
-        
-                    {{-- TRANSAKSI --}}
-                    @if (Auth::user()->user_hak === 'kasir')
-                        <li class="mega-menu mega-menu-sm">
-                            <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                                <i class="icon-basket-loaded menu-icon"></i><span class="nav-text">Transaksi</span>
-                            </a>
-                            <ul aria-expanded="false">
-                                <li><a href="{{ route('transaksi.create') }}">Penjualan</a></li>
-                            </ul>
-                        </li>
-                    @elseif (in_array(Auth::user()->user_hak, ['admin', 'owner']))
-                        <li class="mega-menu mega-menu-sm">
-                            <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                                <i class="icon-basket menu-icon"></i><span class="nav-text">Transaksi</span>
-                            </a>
-                            <ul aria-expanded="false">
-                                <li><a href="{{ route('penerimaan_barang.index') }}">Penerimaan Barang</a></li>
-                                @if (Auth::user()->user_hak === 'owner')
-                                    <li><a href="{{ route('transaksi.create') }}">Penjualan</a></li>
-                                @endif
-                            </ul>
-                        </li>
-                    @endif
-        
-                    {{-- LAPORAN - untuk semua role --}}
+    <div class="nk-sidebar">
+        <div class="nk-nav-scroll">
+            <ul class="metismenu" id="menu" style="margin-top: 20px">
+
+                {{-- DASHBOARD --}}
+                <li>
+                    <a class="has-arrow" href="{{ route('dashboard') }}" aria-expanded="false">
+                        <i class="icon-home menu-icon"></i><span class="nav-text">Dashboard</span>
+                    </a>
+                </li>
+
+                {{-- PRODUK --}}
+                @if (in_array(Auth::user()->user_hak, ['admin', 'kasir', 'owner']))
                     <li class="mega-menu mega-menu-sm">
                         <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="icon-docs menu-icon"></i><span class="nav-text">Laporan</span>
+                            <i class="icon-globe-alt menu-icon"></i><span class="nav-text">Produk</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="{{ route('transaksi.index') }}">Daftar Transaksi</a></li>
-                            <li><a href="{{ route('produk_varian.index') }}">Varian Produk</a></li>
+                            <li><a href="{{ route('kategori.index') }}">Kategori</a></li>
+                            <li><a href="{{ route('produk.index') }}">Produk</a></li>
+                            <li><a href="{{ route('pengajuanBarang.index') }}">Pengajuan Barang</a></li>
                         </ul>
                     </li>
-        
-                    {{-- REFERENSI --}}
-                    @if (in_array(Auth::user()->user_hak, ['admin', 'kasir', 'owner']))
-                        <li class="mega-menu mega-menu-sm">
-                            <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                                <i class="icon-people menu-icon"></i><span class="nav-text">Referensi</span>
-                            </a>
-                            <ul aria-expanded="false">
-                                @if (in_array(Auth::user()->user_hak, ['admin', 'owner']))
-                                    <li><a href="{{ route('user.index') }}">User</a></li>
-                                    <li><a href="{{ route('supplier.index') }}">Supplier</a></li>
-                                @endif
-                                <li><a href="{{ route('member.index') }}">Member</a></li>
-                            </ul>
-                        </li>
-                    @endif
-        
-                </ul>
-            </div>
-        </div>        
+                @endif
+
+                {{-- TRANSAKSI --}}
+                @if (Auth::user()->user_hak === 'kasir')
+                    <li class="mega-menu mega-menu-sm">
+                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                            <i class="icon-basket-loaded menu-icon"></i><span class="nav-text">Transaksi</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{ route('transaksi.create') }}">Penjualan</a></li>
+                        </ul>
+                    </li>
+                @elseif (in_array(Auth::user()->user_hak, ['admin', 'owner']))
+                    <li class="mega-menu mega-menu-sm">
+                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                            <i class="icon-basket menu-icon"></i><span class="nav-text">Transaksi</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{ route('penerimaan_barang.index') }}">Penerimaan Barang</a></li>
+                            @if (Auth::user()->user_hak === 'owner')
+                                <li><a href="{{ route('transaksi.create') }}">Penjualan</a></li>
+                            @endif
+                        </ul>
+                    </li>
+                @endif
+
+                {{-- LAPORAN - untuk semua role --}}
+                <li class="mega-menu mega-menu-sm">
+                    <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                        <i class="icon-docs menu-icon"></i><span class="nav-text">Laporan</span>
+                    </a>
+                    <ul aria-expanded="false">
+                        <li><a href="{{ route('transaksi.index') }}">Daftar Transaksi</a></li>
+                        <li><a href="{{ route('produk_varian.index') }}">Varian Produk</a></li>
+                    </ul>
+                </li>
+
+                {{-- REFERENSI --}}
+                @if (in_array(Auth::user()->user_hak, ['admin', 'kasir', 'owner']))
+                    <li class="mega-menu mega-menu-sm">
+                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                            <i class="icon-people menu-icon"></i><span class="nav-text">Referensi</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            @if (in_array(Auth::user()->user_hak, ['admin', 'owner']))
+                                <li><a href="{{ route('user.index') }}">User</a></li>
+                                <li><a href="{{ route('supplier.index') }}">Supplier</a></li>
+                            @endif
+                            <li><a href="{{ route('member.index') }}">Member</a></li>
+                        </ul>
+                    </li>
+                @endif
+
+            </ul>
+        </div>
+    </div>
 
     <!--**********************************
             Sidebar end
@@ -392,6 +394,9 @@
     <script src="{{ asset('asset') }}/dist/plugins/tables/js/jquery.dataTables.min.js"></script>
     <script src="{{ asset('asset') }}/dist/plugins/tables/js/datatable/dataTables.bootstrap4.min.js"></script>
     <script src="{{ asset('asset') }}/dist/plugins/tables/js/datatable-init/datatable-basic.min.js"></script>
+    <!-- Morris.js and Raphael.js -->
+    <script src="{{ asset('quixlab/plugins/raphael/raphael.min.js') }}"></script>
+    <script src="{{ asset('quixlab/plugins/morris/morris.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         (function($) {

@@ -19,6 +19,7 @@ Route::view('/login', 'auth.login')->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/transaksi-harian', [DashboardController::class, 'getTransaksiHarian']);
 
 // Route yang butuh autentikasi + cek role
 Route::middleware(['auth', CekUserRole::class])->group(function () {
@@ -84,7 +85,6 @@ Route::middleware(['auth', CekUserRole::class])->group(function () {
     Route::get('/get-varian/{produk_id}/{warna}/{size}', [TransaksiController::class, 'getVarian']);
     Route::get('/transaksi/{id}/details', [TransaksiController::class, 'details'])->name('transaksi.details');
     Route::get('/export-pdf', [TransaksiController::class, 'exportPDF'])->name('export.pdf');
-    Route::get('/transaksi-harian', [TransaksiController::class, 'getTransaksiHarian']);
     Route::get('/transaksi/export-pdf', [TransaksiController::class, 'exportPDF'])->name('transaksi.exportPDF');
     Route::get('/transaksi/details/{id}', [TransaksiController::class, 'details'])->name('transaksi.details');
     Route::get('/export-transactions', [TransaksiController::class, 'export'])->name('transactions.export');
