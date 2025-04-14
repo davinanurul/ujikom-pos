@@ -74,13 +74,13 @@
                                 <h4 class="mb-1">Product Sales</h4>
                                 <p>Total Earnings of the Month</p>
                             </div>
-                            <div>
+                            {{-- <div>
                                 <ul>
                                     <li class="d-inline-block mr-3"><a class="text-dark" href="#">Day</a></li>
                                     <li class="d-inline-block mr-3"><a class="text-dark" href="#">Week</a></li>
                                     <li class="d-inline-block"><a class="text-dark" href="#">Month</a></li>
                                 </ul>
-                            </div>
+                            </div> --}}
                         </div>
                         <div class="chart-wrapper">
                             <canvas id="barChartTransaksi" height="100"></canvas>

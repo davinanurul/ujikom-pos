@@ -55,8 +55,8 @@ Route::middleware(['auth', CekUserRole::class])->group(function () {
 
     // Kategori
     Route::get('kategori', [KategoriController::class, 'index'])->name('kategori.index');
-    Route::post('kategori', [KategoriController::class, 'store'])->name('kategori.store');
-    Route::put('kategori/{id}', [KategoriController::class, 'update'])->name('kategori.update');
+    Route::post('kategori/store', [KategoriController::class, 'store'])->name('kategori.store');
+    Route::put('kategori/{id}/edit', [KategoriController::class, 'update'])->name('kategori.update');
 
     // Supplier
     Route::get('supplier', [SupplierController::class, 'index'])->name('supplier.index');

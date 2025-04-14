@@ -13,6 +13,24 @@
     <link href="{{ asset('asset') }}/dist/css/style.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="{{ asset('quixlab/plugins/morris/morris.css') }}">
+    <style>
+        .nk-sidebar .menu-icon {
+            vertical-align: middle !important;
+            font-size: 18px !important;
+        }
+
+        .nk-sidebar .nav-text {
+            vertical-align: middle !important;
+            font-size: 16px !important;
+            line-height: 1.5 !important;
+        }
+
+        .nk-sidebar a {
+            display: flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+        }
+    </style>
 
 </head>
 
@@ -205,19 +223,10 @@
                                 </div>
                             </div>
                         </li>
-                        <li class="icons dropdown d-none d-md-flex">
-                            <a href="javascript:void(0)" class="log-user" data-toggle="dropdown">
-                                <span>English</span> <i class="fa fa-angle-down f-s-14" aria-hidden="true"></i>
-                            </a>
-                            <div class="drop-down dropdown-language animated fadeIn  dropdown-menu">
-                                <div class="dropdown-content-body">
-                                    <ul>
-                                        <li><a href="javascript:void()">English</a></li>
-                                        <li><a href="javascript:void()">Dutch</a></li>
-                                    </ul>
-                                </div>
-                            </div>
+                        <li class="icons d-none d-md-flex">
+                            <h4>{{ Auth::user()->user_nama }}</h4>
                         </li>
+                        
                         <li class="icons dropdown">
                             <div class="user-img c-pointer position-relative" data-toggle="dropdown">
                                 <span class="activity active"></span>
@@ -274,7 +283,7 @@
 
                 {{-- DASHBOARD --}}
                 <li>
-                    <a class="has-arrow" href="{{ route('dashboard') }}" aria-expanded="false">
+                    <a href="{{ route('dashboard') }}">
                         <i class="icon-home menu-icon"></i><span class="nav-text">Dashboard</span>
                     </a>
                 </li>
