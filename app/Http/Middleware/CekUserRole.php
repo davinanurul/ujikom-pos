@@ -10,19 +10,24 @@ class CekUserRole
 {
     public function handle(Request $request, Closure $next)
     {
+        // Cek apakah sudah login
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
+        }
+
         $user = Auth::user();
         $role = $user->user_hak ?? null;
         $routeName = $request->route()->getName();
 
-        // Akses untuk kasir
+        // Akses untuk kasir (kasir bisa akses dashboard)
         if ($role === 'kasir') {
-            // Kasir hanya bisa mengakses transaksi, member, kategori (selain create dan edit), produk (selain create dan edit), varian (selain create dan edit)
             if (
-                str_starts_with($routeName, 'transaksi') || 
+                str_starts_with($routeName, 'transaksi') ||
                 str_starts_with($routeName, 'member') ||
                 (str_starts_with($routeName, 'kategori') && !in_array($routeName, ['kategori.create', 'kategori.edit'])) ||
                 (str_starts_with($routeName, 'produk') && !in_array($routeName, ['produk.create', 'produk.edit'])) ||
-                (str_starts_with($routeName, 'produk_varian') && !in_array($routeName, ['produk_varian.create', 'produk_varian.edit']))
+                (str_starts_with($routeName, 'produk_varian') && !in_array($routeName, ['produk_varian.create', 'produk_varian.edit'])) ||
+                str_starts_with($routeName, 'dashboard') // Kasir bisa akses dashboard
             ) {
                 return $next($request);
             }
@@ -32,7 +37,6 @@ class CekUserRole
 
         // Akses untuk admin
         if ($role === 'admin') {
-            // Admin bisa mengakses semuanya kecuali transaksi
             if (str_starts_with($routeName, 'transaksi')) {
                 return redirect()->route('dashboard')->with('error', 'Anda tidak memiliki akses ke halaman ini.');
             }
@@ -40,13 +44,11 @@ class CekUserRole
             return $next($request);
         }
 
-        // Akses untuk Owner
+        // Akses untuk owner
         if ($role === 'owner') {
-            // Owner bisa mengakses semuanya
             return $next($request);
         }
 
-        // Jika tidak ada role yang sesuai, redirect ke login
         return redirect()->route('login')->with('error', 'Anda tidak memiliki akses ke halaman ini.');
     }
 }

@@ -14,14 +14,27 @@ use App\Http\Controllers\UserController;
 use App\Http\Middleware\CekUserRole;
 use Illuminate\Support\Facades\Route;
 
-// Route Login
+
+// Redirect user yang mengunjungi root ('/') langsung ke halaman login
+Route::get('/', function () {
+    return redirect()->route('login');
+});
+
+// Menampilkan halaman login untuk route '/login' dengan method GET
+// Halaman ini akan berisi form login (email, password) untuk pengguna yang belum login
 Route::view('/login', 'auth.login')->name('login');
+
+// Proses login menggunakan POST request ke '/login'
+// Saat form login dikirim (POST), method 'login' pada 'LoginController' akan dipanggil
 Route::post('/login', [LoginController::class, 'login']);
+
+// Proses logout menggunakan POST request ke '/logout'
+// Saat logout diproses, 'logout' method pada 'LoginController' akan dijalankan
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Route yang butuh autentikasi + cek role
 Route::middleware(['auth', CekUserRole::class])->group(function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/transaksi-harian', [DashboardController::class, 'getTransaksiHarian']);
 
     // User
