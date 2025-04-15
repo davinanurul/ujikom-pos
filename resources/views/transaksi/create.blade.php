@@ -556,6 +556,41 @@
     <script>
         document.getElementById('transaksiForm').addEventListener('submit', function(e) {
             e.preventDefault();
+    
+            const formData = new FormData(this);
+    
+            fetch("{{ route('transaksi.store') }}", {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        title: 'Berhasil!',
+                        text: 'Transaksi berhasil disimpan.',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        window.location.href = "{{ route('transaksi.create') }}";
+                    });
+                } else {
+                    Swal.fire('Error', data.message || 'Terjadi kesalahan saat menyimpan transaksi.', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire('Error', 'Terjadi kesalahan saat menyimpan transaksi.', 'error');
+            });
+        });
+    </script>    
+    {{-- <script>
+        document.getElementById('transaksiForm').addEventListener('submit', function(e) {
+            e.preventDefault();
 
             const formData = new FormData(this);
 
@@ -632,5 +667,5 @@
                     Swal.fire('Error', 'Terjadi kesalahan saat menyimpan transaksi.', 'error');
                 });
         });
-    </script>
+    </script> --}}
 @endsection
