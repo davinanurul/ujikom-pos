@@ -79,7 +79,7 @@
     </div>
 
     <!-- Modal Edit Kategori -->
-    <div class="modal fade" id="editKategoriModal" tabindex="-1" role="dialog">
+    {{-- <div class="modal fade" id="editKategoriModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -103,7 +103,7 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>

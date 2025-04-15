@@ -12,7 +12,7 @@
                         </option>
                     @endforeach
                 </select>
-                <button id="reset-filter" class="btn btn-secondary">Reset</button>
+                <button id="reset-filter" class="btn btn-warning text-white">Reset</button>
             </div>
             <div class="d-flex">
                 <a href="{{ route('penerimaan_barang.create') }}" class="btn btn-primary rounded mr-2">
@@ -24,11 +24,12 @@
                         <i class="fa fa-print mr-1 text-white"></i>Expor
                     </button>
                     <div class="dropdown-menu" aria-labelledby="exportDropdown">
-                        <a class="dropdown-item" href="#" id="exportExcel"><i class="fas fa-file-excel"></i> Export
-                            Excel</a>
-                            <a class="dropdown-item" href="{{ route('produk_varian.exportPDF', ['id_produk' => request('id_produk')]) }}" id="exportPDF">
-                                <i class="fas fa-file-pdf"></i> Export PDF
-                            </a>
+                        <a class="dropdown-item" href="{{ route('produk_varian.exportPDF', ['id_produk' => request('id_produk')]) }}" id="exportPDF">
+                            <i class="fas fa-file-pdf"></i> Export PDF
+                        </a>
+                        <a class="dropdown-item" href="{{ route('products.export', ['id_produk' => request('id_produk')]) }}">
+                            <i class="fa fa-file-excel"></i> Export Excel
+                        </a>                                              
                     </div>
                 </div>
             </div>
@@ -45,24 +46,32 @@
                         <thead>
                             <tr>
                                 <th class="text-center">No</th>
+                                <th class="text-center">SKU</th>
                                 <th class="text-center">Nama Produk</th>
                                 <th class="text-center">Size</th>
                                 <th class="text-center">Warna</th>
                                 <th class="text-center">Harga</th>
                                 <th class="text-center">Stok</th>
                                 <th class="text-center">Total Terjual</th>
+                                <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse ($produkVarians as $index => $varian)
                                 <tr>
                                     <td class="text-center">{{ $index + 1 }}</td>
+                                    <td class="text-center">{{ $varian->sku}}</td>
                                     <td class="text-center">{{ $varian->produk->nama }}</td>
                                     <td class="text-center">{{ $varian->size }}</td>
                                     <td class="text-center">{{ $varian->warna }}</td>
                                     <td class="text-center">{{ number_format($varian->harga_jual) }}</td>
                                     <td class="text-center">{{ $varian->stok }}</td>
                                     <td class="text-center">{{ $varian->detailTransaksi->sum('total_terjual') ?? 0 }}</td>
+                                    <td class="text-center align-middle" style="width: 12%">
+                                        <a href="{{ route('penerimaan_barang.create')}}" class="btn btn-success btn-sm text-white">
+                                            <i class="fas fa-box-open text-white"></i> Restok
+                                        </a>
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>

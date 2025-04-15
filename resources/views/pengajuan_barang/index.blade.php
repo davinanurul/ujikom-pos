@@ -34,7 +34,7 @@
                         value="{{ request('tanggal_mulai') }}">
                     <input type="date" name="tanggal_selesai" class="form-control form-control-sm"
                         value="{{ request('tanggal_selesai') }}">
-                    <button type="submit" class="submit" class="btn btn-primary rounded-0">Filter</button>
+                    <button type="submit" class="btn btn-primary rounded-0">Filter</button>
                     <button type="button" class="btn btn-secondary rounded-0 text-white"
                         onclick="window.location='{{ route('pengajuanBarang.index') }}'">Reset</button>
                 </form>

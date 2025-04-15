@@ -6,10 +6,10 @@
         <h4 class="mb-0"><i class="fa fa-truck text-primary mr-2"></i> Data Produk</h4>
         <div>
             <a href="{{ route('produk.create') }}" class="btn btn-primary">
-                <i class="fa fa-plus mr-1"></i> Tambah Produk
+                <i class="fa fa-plus mr-1"></i> Tambah
             </a>
-            <button class="btn btn-warning" onclick="window.print();">
-                <i class="fa fa-print mr-1"></i> Print/Ekspor
+            <button class="btn btn-warning text-white" onclick="window.print();">
+                <i class="fa fa-print mr-1 text=white"></i> Print/Ekspor
             </button>
         </div>
     </div>

@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ProductsExport;
 use App\Models\Produk;
 use App\Models\ProdukVarian;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProdukVarianController extends Controller
 {
@@ -91,5 +93,14 @@ class ProdukVarianController extends Controller
 
         // Download PDF
         return $pdf->download('laporan-produk-varian.pdf');
+    }
+
+    public function export(Request $request)
+    {
+        $idProduk = $request->get('id_produk');
+        return Excel::download(
+            new ProductsExport($idProduk),
+            'produk_varians.xlsx'
+        );
     }
 }

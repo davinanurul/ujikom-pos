@@ -235,9 +235,12 @@ class TransaksiController extends Controller
         return view('transaksi.details', compact('transaksi', 'detailTransaksi'));
     }
 
-    public function export()
+    public function export(Request $request)
     {
-        return Excel::download(new TransactionsExport, 'transactions.xlsx');
+        $tanggalMulai = $request->tanggal_mulai;
+        $tanggalSelesai = $request->tanggal_selesai;
+
+        return Excel::download(new TransactionsExport($tanggalMulai, $tanggalSelesai), 'transactions.xlsx');
     }
 
     public function struk($id)

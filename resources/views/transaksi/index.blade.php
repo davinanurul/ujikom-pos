@@ -21,18 +21,19 @@
             <div class="dropdown">
                 <button class="btn btn-warning dropdown-toggle" type="button" id="exportDropdown" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
-                    <i class="fa fa-print mr-1"></i> Print/Ekspor
+                    <i class="fa fa-print mr-1"></i> Ekspor
                 </button>
                 <div class="dropdown-menu" aria-labelledby="exportDropdown">
-                    <a class="dropdown-item" href="#" id="exportExcel">
-                        <i class="fas fa-file-excel"></i> Export Excel
-                    </a>
                     <a class="dropdown-item"
                         href="{{ route('transaksi.exportPDF', ['tanggal_mulai' => request('tanggal_mulai'), 'tanggal_selesai' => request('tanggal_selesai')]) }}"
                         id="exportPDF">
                         <i class="fas fa-file-pdf"></i> Export PDF
                     </a>
+                    <a class="dropdown-item" href="{{ route('transactions.export', ['tanggal_mulai' => request('tanggal_mulai'), 'tanggal_selesai' => request('tanggal_selesai')]) }}">
+                        <i class="fa fa-file-excel"></i> Export Excel
+                    </a>
                 </div>
+                
             </div>
         </div>
     </div>
@@ -66,7 +67,6 @@
                                 <a href="{{ route('transaksi.details', $transaksi->id) }}" class="btn btn-primary">
                                     <i class="fa fa-eye"></i> Detail
                                 </a>
-                                <a href="{{ route('transaksi.struk', $transaksi->id) }}">Lihat Struk</a>
                             </td>
                         </tr>
                     @empty

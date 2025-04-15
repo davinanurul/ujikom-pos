@@ -80,6 +80,8 @@ Route::middleware(['auth', CekUserRole::class])->group(function () {
     Route::post('produk_varian/store', [ProdukVarianController::class, 'store'])->name('produk_varian.store');
     Route::get('/export_produk-pdf', [ProdukVarianController::class, 'exportPDF'])->name('export_produk.pdf');
     Route::get('/produk-varian/export-pdf', [ProdukVarianController::class, 'exportPDF'])->name('produk_varian.exportPDF');
+    Route::get('/export-products', [ProdukVarianController::class, 'export'])->name('products.export');
+
 
     // Penerimaan Barang
     Route::get('penerimaan_barang', [PenerimaanBarangController::class, 'index'])->name('penerimaan_barang.index');
