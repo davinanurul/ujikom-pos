@@ -23,6 +23,7 @@
                         <th class="text-center">Supplier</th>
                         <th class="text-center">Kategori</th>
                         <th class="text-center">Kode</th>
+                        <th class="text-center">Barcode</th>
                         <th class="text-center">Nama</th>
                         <th class="text-center" style="width: 15%">Aksi</th>
                     </tr>
@@ -34,6 +35,9 @@
                             <td class="text-center">{{ $produk->supplier->nama }}</td>
                             <td class="text-center">{{ $produk->kategori->nama_kategori }}</td>
                             <td class="text-center">{{ $produk->kode }}</td>
+                            <td class="text-center">
+                                {!! DNS1D::getBarcodeHTML($produk->kode, 'C128', 1.5, 50) !!}
+                            </td>                            
                             <td class="text-center">{{ $produk->nama }}</td>
                             <td class="text-center" style="width: 20%">
                                 <div class="btn-group">
@@ -48,7 +52,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="text-center">Tidak ada data.</td>
+                            <td colspan="7" class="text-center">Tidak ada data.</td>
                         </tr>
                     @endforelse
                 </tbody>

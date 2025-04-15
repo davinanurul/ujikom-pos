@@ -100,8 +100,8 @@ class TransaksiController extends Controller
             $printer = new Printer($connector);
         
             $printer->setJustification(Printer::JUSTIFY_CENTER);
-            $printer->text("Toko Ujikom\n");
-            $printer->text("Jl. Contoh Alamat\n");
+            $printer->text("Toko Davina\n");
+            $printer->text("Jl. Pasarean 01/12\n");
             $printer->feed();
         
             $printer->setJustification(Printer::JUSTIFY_LEFT);
