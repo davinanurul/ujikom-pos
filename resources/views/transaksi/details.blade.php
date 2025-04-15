@@ -66,10 +66,10 @@
                                         @endforeach
                                     </tbody>
                                 </table>
-                            </div>
-                            <div class="mt-4">
-                                <a href="{{ route('transaksi.index') }}" class="btn btn-primary">Kembali</a>
-                                <button onclick="window.print()" class="btn btn-success">Cetak</button>
+                                <div class="mt-4">
+                                    <a href="{{ route('transaksi.index') }}" class="btn btn-primary">Kembali</a>
+                                    <button onclick="window.print()" class="btn btn-success">Cetak</button>
+                                </div>
                             </div>
                         </div>
                     </div>

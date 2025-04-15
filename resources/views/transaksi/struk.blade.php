@@ -1,77 +1,112 @@
 @extends('layouts.layout')
-@section('title', 'Detail Transaksi')
+@section('title', 'Struk Transaksi')
 
 @section('content')
-    <div class="page-body">
-        <div class="container-xl">
-            <div class="d-flex justify-content-center align-items-center" style="margin: 20px;">
-                <div class="col-12">
-                    <div class="card mb-5">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Informasi Transaksi</h6>
-                        </div>
-                        <div class="card">
-                            <div class="card-body">
-                                <table class="table table-borderless" style="margin-bottom: 3%">
-                                    <tbody>
-                                        <tr>
-                                            <th style="width: 20%;">Nomor Transaksi</th>
-                                            <th>:</th>
-                                            <td>{{ $transaksi->nomor_transaksi }}</td>
-                                            <th>Tanggal Transaksi</th>
-                                            <th>:</th>
-                                            <td>{{ \Carbon\Carbon::parse($transaksi->tanggal)->format('d/m/Y') }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Total Transaksi</th>
-                                            <th>:</th>
-                                            <td>{{ number_format($transaksi->total) }}</td>
-                                            <th>Pembayaran</th>
-                                            <th>:</th>
-                                            <td>{{ $transaksi->pembayaran }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Member</th>
-                                            <th>:</th>
-                                            <td>{{ $transaksi->member->nama ?? '-' }}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <table class="table table-bordered" id="datatable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-center">No</th>
-                                            <th class="text-center">Nama Produk</th>
-                                            <th class="text-center">Warna</th>
-                                            <th class="text-center">Size</th>
-                                            <th class="text-center">Qty</th>
-                                            <th class="text-center">Harga</th>
-                                            <th class="text-center">Subtotal</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($detailTransaksi as $detail)
-                                        <tr>
-                                            <td class="text-center">{{ $loop->iteration }}</td>
-                                            <td class="text-center">{{ $detail->produk->nama ?? 'Produk tidak ditemukan' }}</td>
-                                            <td class="text-center">{{ $detail->varian->warna ?? 'Produk tidak ditemukan' }}</td>
-                                            <td class="text-center">{{ $detail->varian->size ?? 'Produk tidak ditemukan' }}</td>
-                                            <td class="text-center">{{ $detail->qty }}</td>
-                                            <td class="text-right">{{ number_format($detail->harga) }}</td>
-                                            <td class="text-right">{{ number_format($detail->subtotal) }}</td>
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+    <style>
+        .struk-container {
+            max-width: 400px;
+            margin: 0 auto;
+            font-family: monospace;
+            font-size: 14px;
+            background-color: #fff;
+            padding: 20px;
+            border: 1px dashed #000;
+        }
 
-                                <div class="mt-4">
-                                    <a href="{{ route('transaksi.index') }}" class="btn btn-primary">Kembali</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        .struk-container h4,
+        .struk-container p {
+            text-align: center;
+            margin: 0;
+        }
+
+        .struk-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .struk-table th,
+        .struk-table td {
+            text-align: left;
+            padding: 4px 0;
+        }
+
+        .struk-table th {
+            font-weight: bold;
+        }
+
+        .struk-total {
+            border-top: 1px dashed #000;
+            margin-top: 10px;
+            padding-top: 5px;
+            font-weight: bold;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+    </style>
+
+    <div class="struk-container" id="print-area>
+        <h4>Nama Toko</h4>
+        <p>Jl. Contoh Alamat No. 123</p>
+        <p>0812-XXXX-XXXX</p>
+        <hr>
+
+        <p>No Transaksi : {{ $transaksi->nomor_transaksi }}</p>
+        <p>Tanggal : {{ \Carbon\Carbon::parse($transaksi->tanggal)->format('d/m/Y H:i') }}</p>
+        <p>Pembayaran : {{ $transaksi->pembayaran }}</p>
+        <p>Member : {{ $transaksi->member->nama ?? '-' }}</p>
+
+        <hr>
+        <table class="struk-table">
+            <thead>
+                <tr>
+                    <th>Produk</th>
+                    <th class="text-right">Sub</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($detailTransaksi as $detail)
+                    <tr>
+                        <td>
+                            {{ $detail->produk->nama ?? '-' }}<br>
+                            {{ $detail->varian->warna ?? '-' }} / {{ $detail->varian->size ?? '-' }}
+                            x{{ $detail->qty }}<br>
+                            @ Rp{{ number_format($detail->harga) }}
+                        </td>
+                        <td class="text-right">Rp{{ number_format($detail->subtotal) }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+
+        <p class="struk-total text-right">Total: Rp{{ number_format($transaksi->total) }}</p>
+
+        <hr>
+        <p class="text-center">Terima kasih telah berbelanja</p>
     </div>
+    <div class="mt-4">
+        <button onclick="printStruk()" class="btn btn-success">Cetak</button>
+    </div>
+    
+    <script>
+        function printStruk() {
+            var strukContent = document.querySelector('.struk-container'); // Pilih div struk-container
+            var bodyContent = document.body.innerHTML; // Ambil seluruh konten halaman
+    
+            // Sisipkan hanya konten struk ke dalam body untuk mencetak
+            document.body.innerHTML = strukContent.outerHTML;
+    
+            // Mencetak
+            window.print();
+    
+            // Kembalikan konten body setelah pencetakan selesai
+            document.body.innerHTML = bodyContent;
+        }
+    </script>    
 @endsection

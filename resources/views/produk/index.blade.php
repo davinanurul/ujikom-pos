@@ -8,7 +8,7 @@
             <a href="{{ route('produk.create') }}" class="btn btn-primary">
                 <i class="fa fa-plus"></i> Tambah Produk
             </a>
-            <button class="btn btn-success" onclick="window.print();">
+            <button class="btn btn-warning" onclick="window.print();">
                 <i class="fa fa-print"></i> Print/Ekspor
             </button>
         </div>
@@ -40,7 +40,7 @@
                                     <a href="{{ route('produk.details', $produk->id) }}" class="btn btn-primary">
                                         Detail
                                     </a>
-                                    <a href="{{ route('produk.edit', ['id' => $produk->id]) }}" class="btn btn-warning">
+                                    <a href="{{ route('produk.edit', ['id' => $produk->id]) }}" class="btn btn-success">
                                         Edit
                                     </a>
                                 </div>                                        

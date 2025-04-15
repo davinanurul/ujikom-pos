@@ -69,6 +69,7 @@
                                         <a href="{{ route('transaksi.details', $transaksi->id) }}" class="btn btn-primary">
                                             <i class="fa fa-eye"></i> Detail
                                         </a>
+                                        <a href="{{ route('transaksi.struk', $transaksi->id) }}">Lihat Struk</a>
                                     </td>
                                 </tr>
                             @empty

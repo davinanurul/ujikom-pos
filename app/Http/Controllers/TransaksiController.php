@@ -177,4 +177,22 @@ class TransaksiController extends Controller
     {
         return Excel::download(new TransactionsExport, 'transactions.xlsx');
     }
+
+    public function struk($id)
+    {
+        $transaksi = Transaksi::with('detailTransaksi')->findOrFail($id);
+
+        // Kalau request ajax untuk print, kembalikan partial view saja
+        if (request()->ajax()) {
+            return view('transaksi._struk_partial', [
+                'transaksi' => $transaksi,
+                'detailTransaksi' => $transaksi->detailTransaksi,
+            ])->render();
+        }
+
+        return view('transaksi.struk', [
+            'transaksi' => $transaksi,
+            'detailTransaksi' => $transaksi->detailTransaksi,
+        ]);
+    }
 }

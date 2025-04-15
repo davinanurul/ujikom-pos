@@ -41,7 +41,8 @@
                         Produk</button>
                     {{-- <button type="button" class="btn btn-primary btn-sm mb-3" data-bs-toggle="modal"
                         data-bs-target="#produkModal">Pilih Produk</button> --}}
-                    <button type="button" class="btn btn-primary btn-sm mb-3" data-toggle="modal" data-target="#produkModal">
+                    <button type="button" class="btn btn-primary btn-sm mb-3" data-toggle="modal"
+                        data-target="#produkModal">
                         Pilih Produk
                     </button>
                     <div class="table-responsive">
@@ -129,28 +130,28 @@
     </div>
 
     <!-- Modal Tambah Kategori -->
-<div class="modal fade" id="addKategoriModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Tambah Kategori Baru</h5>
-            </div>
-            <form action="{{ route('kategori.store') }}" method="POST">
-                @csrf
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label>Nama Kategori</label>
-                        <input type="text" class="form-control" name="nama_kategori" required>
+    <div class="modal fade" id="addKategoriModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tambah Kategori Baru</h5>
+                </div>
+                <form action="{{ route('kategori.store') }}" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Nama Kategori</label>
+                            <input type="text" class="form-control" name="nama_kategori" required>
+                        </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn mb-1 btn-outline-primary" data-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn mb-1 btn-primary">Simpan</button>
-                </div>
-            </form>
+                    <div class="modal-footer">
+                        <button type="button" class="btn mb-1 btn-outline-primary" data-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn mb-1 btn-primary">Simpan</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
     <!-- Modal -->
     <div class="modal fade" id="produkModal" tabindex="-1" aria-labelledby="produkModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
@@ -554,7 +555,7 @@
     </script>
     <script>
         document.getElementById('transaksiForm').addEventListener('submit', function(e) {
-            e.preventDefault(); // Mencegah form submit biasa
+            e.preventDefault();
 
             const formData = new FormData(this);
 
@@ -569,20 +570,55 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        // Tampilkan SweetAlert dengan pilihan
                         Swal.fire({
                             title: 'Transaksi Berhasil!',
                             text: 'Apa yang ingin Anda lakukan selanjutnya?',
                             icon: 'success',
                             showCancelButton: true,
                             confirmButtonText: 'Cetak Struk',
-                            cancelButtonText: 'Buat Transaksi Baru',
+                            cancelButtonText: 'Tutup',
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                // Redirect ke halaman detail transaksi dengan ID yang benar
-                                window.location.href = `/transaksi/details/${data.transaksi_id}`;
+                                fetch(`/struk/${data.transaksi_id}?ajax=true`, {
+                                        headers: {
+                                            'X-Requested-With': 'XMLHttpRequest'
+                                        }
+                                    })
+                                    .then(res => res.text())
+                                    .then(html => {
+                                        if (!html.trim()) {
+                                            Swal.fire('Gagal Cetak',
+                                                'Struk kosong atau tidak ditemukan.', 'error');
+                                            return;
+                                        }
+
+                                        const printWindow = window.open('', '_blank');
+                                        printWindow.document.open();
+                                        printWindow.document.write(`
+                                    <html>
+                                        <head>
+                                            <title>Struk Transaksi</title>
+                                            <style>
+                                                body { font-family: sans-serif; padding: 20px; }
+                                            </style>
+                                        </head>
+                                        <body onload="window.print(); window.close();">
+                                            ${html}
+                                        </body>
+                                    </html>
+                                `);
+                                        printWindow.document.close();
+
+                                        // Cek apakah jendela sudah ditutup
+                                        const checkWindow = setInterval(() => {
+                                            if (printWindow.closed) {
+                                                clearInterval(checkWindow);
+                                                window.location.href =
+                                                    "{{ route('transaksi.create') }}";
+                                            }
+                                        }, 500);
+                                    });
                             } else {
-                                // Langsung redirect ke halaman create transaksi
                                 window.location.href = "{{ route('transaksi.create') }}";
                             }
                         });

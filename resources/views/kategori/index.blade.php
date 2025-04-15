@@ -8,7 +8,7 @@
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addKategoriModal">
                     <i class="fa fa-plus"></i> Tambah Kategori
                 </button>
-                <button class="btn btn-success text-white" onclick="window.print();">
+                <button class="btn btn-warning text-white" onclick="window.print();">
                     <i class="fa fa-print text-white"></i> Print/Ekspor
                 </button>
             </div>
@@ -33,7 +33,7 @@
                                             <td class="text-center">{{ $index + 1 }}</td>
                                             <td class="text-center">{{ $kategori->nama_kategori }}</td>
                                             <td class="text-center">
-                                                <button class="btn btn-warning btn edit-btn text-white"
+                                                <button class="btn btn-success btn edit-btn text-white"
                                                     data-id="{{ $kategori->id }}" data-nama="{{ $kategori->nama_kategori }}"
                                                     data-toggle="modal" data-target="#editKategoriModal">
                                                     <i class="fa fa-edit text-white"></i> Edit
