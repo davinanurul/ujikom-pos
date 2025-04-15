@@ -3,9 +3,6 @@
 @section('content')
     <div class="container-fluid">
         <div class="card shadow">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Form Transaksi</h6>
-            </div>
             <div class="card-body">
                 <form id="transaksiForm" action="{{ route('transaksi.store') }}" method="POST">
                     @csrf
@@ -88,25 +85,38 @@
                         </table>
                     </div>
 
-                    <div class="form-group">
-                        <label>Total Keseluruhan</label>
-                        <input type="text" id="grand_total" name="total" class="form-control bg-light" readonly>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label for="grand_total" class="form-label">Total Keseluruhan</label>
+                                <input type="text" id="grand_total_display" class="form-control bg-light" readonly>
+                                <input type="hidden" id="grand_total" name="total" value="0">
+
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="bayar" class="form-label">Jumlah Bayar</label>
+                            <input type="text" id="bayar_display" class="form-control" required>
+                            <input type="hidden" id="bayar" name="bayar">
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="bayar" class="form-label">Jumlah Bayar</label>
-                        <input type="number" id="bayar" name="bayar" class="form-control" min="0"
-                            oninput="hitungKembalian()" required>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="kembalian" class="form-label">Kembalian</label>
+                            <input type="text" id="kembalian_display" class="form-control bg-light" readonly>
+                            <input type="hidden" id="kembalian" name="kembalian">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="pembayaran" class="form-label">Metode Pembayaran</label>
+                            <select class="form-control" id="pembayaran" name="pembayaran" required>
+                                <option value="TUNAI">TUNAI</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="kembalian" class="form-label">Kembalian</label>
-                        <input type="number" id="kembalian" name="kembalian" class="form-control" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="pembayaran" class="form-label">Metode Pembayaran</label>
-                        <select class="form-control" id="pembayaran" name="pembayaran" required>
-                            <option value="TUNAI">TUNAI</option>
-                        </select>
-                    </div>
+
 
                     <button type="submit" id="btn-submit" class="btn btn-primary btn-block">Simpan</button>
                 </form>
@@ -322,8 +332,16 @@
                 grandTotal += parseInt(totalValue) || 0;
             });
 
-            document.getElementById("grand_total").value = formatRupiah(grandTotal);
+            // Set nilai asli ke input hidden
+            document.getElementById("grand_total").value = grandTotal;
+
+            // Set nilai format Rp ke input display
+            document.getElementById("grand_total_display").value = formatRupiah(grandTotal);
+
+            // Hitung ulang kembalian setelah total diupdate
+            hitungKembalian();
         }
+
 
         $(document).ready(function() {
             const produkItems = $('.produk-item'); // Ambil semua item produk
@@ -555,35 +573,40 @@
             if (isNaN(angka)) return "Rp 0";
             return "Rp " + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
-    
+
+        function parseRupiah(rp) {
+            return parseInt(rp.replace(/[^0-9]/g, '')) || 0;
+        }
+
         function hitungKembalian() {
-            const total = parseInt(document.getElementById("grand_total").value.replace(/\D/g, '')) || 0;
-            const bayarInput = document.getElementById("bayar");
-            const bayar = parseInt(bayarInput.value.replace(/\D/g, '')) || 0;
+            const bayar = parseRupiah(document.getElementById("bayar_display").value);
+            const total = parseRupiah(document.getElementById("grand_total").value);
             const kembalian = bayar - total;
-    
+
+            // Tampilkan & simpan ke input kembalian
+            document.getElementById("kembalian_display").value = formatRupiah(kembalian > 0 ? kembalian : 0);
             document.getElementById("kembalian").value = kembalian > 0 ? kembalian : 0;
-    
+
+            // Validasi tombol submit (jika ada)
             const btnSubmit = document.getElementById("btn-submit");
-            if (bayar >= total) {
-                btnSubmit.disabled = false;
-            } else {
-                btnSubmit.disabled = true;
+            if (btnSubmit) {
+                btnSubmit.disabled = bayar < total;
             }
         }
-    
-        // Format input bayar agar tidak bisa diketik huruf, dan auto format angka
-        document.addEventListener("DOMContentLoaded", function () {
-            const bayarInput = document.getElementById("bayar");
-    
-            bayarInput.addEventListener("input", function () {
-                // Menghapus karakter selain angka
-                this.value = this.value.replace(/\D/g, '');
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const bayarDisplay = document.getElementById("bayar_display");
+            const bayarHidden = document.getElementById("bayar");
+
+            bayarDisplay.addEventListener("input", function() {
+                let value = this.value.replace(/[^0-9]/g, '');
+                this.value = formatRupiah(value);
+                bayarHidden.value = value;
                 hitungKembalian();
             });
-    
-            // Cek validasi juga saat load (kalau sudah terisi)
+
+            // Hitung kembalian saat awal load (jika nilai sudah diisi)
             hitungKembalian();
         });
-    </script>    
+    </script>
 @endsection
