@@ -18,7 +18,9 @@ class Transaksi extends Model
         'user_id',
         'member_id',
         'total',
-        'pembayaran'
+        'pembayaran',
+        'bayar',
+        'kembalian'
     ];
 
     // Relasi ke User

@@ -93,13 +93,22 @@
                         <input type="text" id="grand_total" name="total" class="form-control bg-light" readonly>
                     </div>
                     <div class="form-group">
+                        <label for="bayar" class="form-label">Jumlah Bayar</label>
+                        <input type="number" id="bayar" name="bayar" class="form-control" min="0"
+                            oninput="hitungKembalian()" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="kembalian" class="form-label">Kembalian</label>
+                        <input type="number" id="kembalian" name="kembalian" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
                         <label for="pembayaran" class="form-label">Metode Pembayaran</label>
                         <select class="form-control" id="pembayaran" name="pembayaran" required>
                             <option value="TUNAI">TUNAI</option>
                         </select>
                     </div>
 
-                    <button type="submit" class="btn btn-primary btn-block">Simpan</button>
+                    <button type="submit" id="btn-submit" class="btn btn-primary btn-block">Simpan</button>
                 </form>
             </div>
         </div>
@@ -508,41 +517,6 @@
     <script>
         document.getElementById('transaksiForm').addEventListener('submit', function(e) {
             e.preventDefault();
-    
-            const formData = new FormData(this);
-    
-            fetch("{{ route('transaksi.store') }}", {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Accept': 'application/json'
-                },
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    Swal.fire({
-                        title: 'Berhasil!',
-                        text: 'Transaksi berhasil disimpan.',
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    }).then(() => {
-                        window.location.href = "{{ route('transaksi.create') }}";
-                    });
-                } else {
-                    Swal.fire('Error', data.message || 'Terjadi kesalahan saat menyimpan transaksi.', 'error');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                Swal.fire('Error', 'Terjadi kesalahan saat menyimpan transaksi.', 'error');
-            });
-        });
-    </script>    
-    {{-- <script>
-        document.getElementById('transaksiForm').addEventListener('submit', function(e) {
-            e.preventDefault();
 
             const formData = new FormData(this);
 
@@ -558,56 +532,12 @@
                 .then(data => {
                     if (data.success) {
                         Swal.fire({
-                            title: 'Transaksi Berhasil!',
-                            text: 'Apa yang ingin Anda lakukan selanjutnya?',
+                            title: 'Berhasil!',
+                            text: 'Transaksi berhasil disimpan.',
                             icon: 'success',
-                            showCancelButton: true,
-                            confirmButtonText: 'Cetak Struk',
-                            cancelButtonText: 'Tutup',
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                fetch(`/struk/${data.transaksi_id}?ajax=true`, {
-                                        headers: {
-                                            'X-Requested-With': 'XMLHttpRequest'
-                                        }
-                                    })
-                                    .then(res => res.text())
-                                    .then(html => {
-                                        if (!html.trim()) {
-                                            Swal.fire('Gagal Cetak',
-                                                'Struk kosong atau tidak ditemukan.', 'error');
-                                            return;
-                                        }
-
-                                        const printWindow = window.open('', '_blank');
-                                        printWindow.document.open();
-                                        printWindow.document.write(`
-                                    <html>
-                                        <head>
-                                            <title>Struk Transaksi</title>
-                                            <style>
-                                                body { font-family: sans-serif; padding: 20px; }
-                                            </style>
-                                        </head>
-                                        <body onload="window.print(); window.close();">
-                                            ${html}
-                                        </body>
-                                    </html>
-                                `);
-                                        printWindow.document.close();
-
-                                        // Cek apakah jendela sudah ditutup
-                                        const checkWindow = setInterval(() => {
-                                            if (printWindow.closed) {
-                                                clearInterval(checkWindow);
-                                                window.location.href =
-                                                    "{{ route('transaksi.create') }}";
-                                            }
-                                        }, 500);
-                                    });
-                            } else {
-                                window.location.href = "{{ route('transaksi.create') }}";
-                            }
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            window.location.href = "{{ route('transaksi.create') }}";
                         });
                     } else {
                         Swal.fire('Error', data.message || 'Terjadi kesalahan saat menyimpan transaksi.',
@@ -619,5 +549,41 @@
                     Swal.fire('Error', 'Terjadi kesalahan saat menyimpan transaksi.', 'error');
                 });
         });
-    </script> --}}
+    </script>
+    <script>
+        function formatRupiah(angka) {
+            if (isNaN(angka)) return "Rp 0";
+            return "Rp " + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+    
+        function hitungKembalian() {
+            const total = parseInt(document.getElementById("grand_total").value.replace(/\D/g, '')) || 0;
+            const bayarInput = document.getElementById("bayar");
+            const bayar = parseInt(bayarInput.value.replace(/\D/g, '')) || 0;
+            const kembalian = bayar - total;
+    
+            document.getElementById("kembalian").value = kembalian > 0 ? kembalian : 0;
+    
+            const btnSubmit = document.getElementById("btn-submit");
+            if (bayar >= total) {
+                btnSubmit.disabled = false;
+            } else {
+                btnSubmit.disabled = true;
+            }
+        }
+    
+        // Format input bayar agar tidak bisa diketik huruf, dan auto format angka
+        document.addEventListener("DOMContentLoaded", function () {
+            const bayarInput = document.getElementById("bayar");
+    
+            bayarInput.addEventListener("input", function () {
+                // Menghapus karakter selain angka
+                this.value = this.value.replace(/\D/g, '');
+                hitungKembalian();
+            });
+    
+            // Cek validasi juga saat load (kalau sudah terisi)
+            hitungKembalian();
+        });
+    </script>    
 @endsection

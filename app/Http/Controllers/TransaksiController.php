@@ -59,8 +59,21 @@ class TransaksiController extends Controller
             'qty.*' => 'integer|min:1',
             'harga' => 'required|array',
             'subtotal' => 'required|array',
+            'bayar' => 'required|numeric|min:0',
         ]);
 
+        $total = preg_replace('/[^\d]/', '', $request->total);
+        $bayar = preg_replace('/[^\d]/', '', $request->bayar);
+
+        // Validasi jika bayar kurang dari total
+        if ($bayar < $total) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Jumlah bayar kurang dari total yang harus dibayar.',
+            ], 422);
+        }
+
+        $kembalian = $bayar - $total;
         $nomor_transaksi = Transaksi::generateNomorTransaksi();
 
         $transaksi = Transaksi::create([
@@ -68,7 +81,9 @@ class TransaksiController extends Controller
             'tanggal' => now(),
             'member_id' => $request->member_id,
             'pembayaran' => $request->pembayaran,
-            'total' => preg_replace('/[^\d]/', '', $request->total),
+            'total' => $total,
+            'bayar' => $bayar,
+            'kembalian' => $kembalian,
             'user_id' => Auth::id(),
         ]);
 
@@ -95,8 +110,7 @@ class TransaksiController extends Controller
         }
 
         try {
-            $connector = new WindowsPrintConnector("POS-58"); // Ganti dengan nama printer kamu
-            $connector->finalize();
+            $connector = new WindowsPrintConnector("POS-58");
             $printer = new Printer($connector);
 
             $printer->setJustification(Printer::JUSTIFY_CENTER);
@@ -105,35 +119,25 @@ class TransaksiController extends Controller
             $printer->feed();
 
             $printer->setJustification(Printer::JUSTIFY_LEFT);
-            $printer->text("Tanggal: " . $transaksi->created_at->format('d-m-Y H:i') . "\n");
-            $printer->text("No Transaksi: #" . $transaksi->id . "\n");
+            $printer->text("Tanggal     : " . $transaksi->created_at->format('d-m-Y H:i') . "\n");
+            $printer->text("No. Transaksi: #" . $transaksi->nomor_transaksi . "\n");
             $printer->text("--------------------------------\n");
 
-            // Loop untuk detail transaksi
             foreach ($transaksi->detailTransaksi as $item) {
-                // Ambil nama produk, warna, dan ukuran dari relasi produk dan produkVarian
                 $namaProduk = $item->produk->nama;
-                $warna = $item->produkVarian->warna; // Ambil warna dari relasi ProdukVarian
-                $ukuran = $item->produkVarian->size; // Ambil ukuran dari relasi ProdukVarian
+                $warna = $item->produkVarian->warna;
+                $ukuran = $item->produkVarian->size;
 
-                // Format line yang akan dicetak
-                $line = sprintf("%-15s %5d x %5d", $namaProduk, $item->qty, $item->harga);
-
-                // Menambahkan warna dan ukuran jika ada
-                if ($warna) {
-                    $line .= " " . $warna;
-                }
-                if ($ukuran) {
-                    $line .= " " . $ukuran;
-                }
-
-                $printer->text($line . "\n");
+                $printer->text($namaProduk . "\n");
+                $printer->text("  " . $warna . " / " . $ukuran . "\n");
+                $printer->text(sprintf("  %d x %s = %s\n", $item->qty, number_format($item->harga, 0, ',', '.'), number_format($item->subtotal, 0, ',', '.')));
             }
-
 
             $printer->text("--------------------------------\n");
             $printer->setJustification(Printer::JUSTIFY_RIGHT);
-            $printer->text("Total: Rp " . number_format($transaksi->total, 0, ',', '.') . "\n");
+            $printer->text("Total     : Rp " . number_format($transaksi->total, 0, ',', '.') . "\n");
+            $printer->text("Bayar     : Rp " . number_format($transaksi->bayar, 0, ',', '.') . "\n");
+            $printer->text("Kembalian : Rp " . number_format($transaksi->kembalian, 0, ',', '.') . "\n");
             $printer->feed(2);
 
             $printer->setJustification(Printer::JUSTIFY_CENTER);

@@ -32,12 +32,12 @@
                     @forelse ($produks as $index => $produk)
                         <tr>
                             <td class="text-center">{{ $index + 1 }}</td>
-                            <td class="text-center">{{ $produk->supplier->nama }}</td>
-                            <td class="text-center">{{ $produk->kategori->nama_kategori }}</td>
-                            <td class="text-center">{{ $produk->kode }}</td>
                             <td class="text-center">
                                 {!! DNS1D::getBarcodeHTML($produk->kode, 'C128', 1.5, 50) !!}
-                            </td>                            
+                            </td>
+                            <td class="text-center">{{ $produk->kode }}</td> 
+                            <td class="text-center">{{ $produk->supplier->nama }}</td>
+                            <td class="text-center">{{ $produk->kategori->nama_kategori }}</td>                           
                             <td class="text-center">{{ $produk->nama }}</td>
                             <td class="text-center" style="width: 20%">
                                 <div class="btn-group">
