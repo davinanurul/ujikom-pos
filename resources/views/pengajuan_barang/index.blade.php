@@ -3,18 +3,17 @@
 @section('content')
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <div class="btn-group">
+            <div class="d-flex align-items-center">
                 <!-- Tombol "Buat Pengajuan Barang" -->
-                <button type="button" class="btn btn-primary rounded-0" data-toggle="modal"
-                    data-target="#pengajuanBarangModal">
-                    <i class="fas fa-plus"></i> Buat Pengajuan
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#pengajuanBarangModal">
+                    <i class="fa fa-plus mr-1"></i>Buat Pengajuan
                 </button>
 
                 <!-- Dropdown Export -->
-                <div class="dropdown">
-                    <button class="btn btn-success dropdown-toggle rounded-0" type="button" id="exportDropdown"
+                <div class="dropdown ml-2">
+                    <button class="btn btn-warning dropdown-toggle text-white" type="button" id="exportDropdown"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-download"></i> Export
+                        <i class="fa fa-print text-white mr-1"></i> Export
                     </button>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="exportDropdown">
                         <a class="dropdown-item" href="#" id="exportExcel">
@@ -30,17 +29,14 @@
             <!-- Grup Filter dan Export -->
             <div class="d-flex align-items-center gap-3">
                 <!-- Form Filter -->
-                <form method="GET" action="{{ route('pengajuanBarang.index') }}" class="form-inline d-flex gap-2">
-                    <div class="input-group">
-                        <input type="date" name="tanggal_mulai" class="form-control"
-                            value="{{ request('tanggal_mulai') }}">
-                        <input type="date" name="tanggal_selesai" class="form-control"
-                            value="{{ request('tanggal_selesai') }}">
-                        <div class="input-group-append">
-                            <button type="submit" class="btn btn-primary"></i> Filter</button>
-                            <a href="{{ route('pengajuanBarang.index') }}" class="btn btn-secondary"> Reset</a>
-                        </div>
-                    </div>
+                <form method="GET" action="{{ route('pengajuanBarang.index') }}" class="d-flex gap-3">
+                    <input type="date" name="tanggal_mulai" class="form-control form-control-sm"
+                        value="{{ request('tanggal_mulai') }}">
+                    <input type="date" name="tanggal_selesai" class="form-control form-control-sm"
+                        value="{{ request('tanggal_selesai') }}">
+                    <button type="submit" class="submit" class="btn btn-primary rounded-0">Filter</button>
+                    <button type="button" class="btn btn-secondary rounded-0 text-white"
+                        onclick="window.location='{{ route('pengajuanBarang.index') }}'">Reset</button>
                 </form>
             </div>
         </div>
@@ -81,10 +77,10 @@
                                         </div>
                                     </td>
                                     <td class="text-center">
-                                        <button class="btn btn-warning edit-btn" data-id="{{ $pengajuan->id }}"
+                                        <button class="btn btn-success edit-btn text-white" data-id="{{ $pengajuan->id }}"
                                             data-nama="{{ $pengajuan->nama_pengaju }}" data-toggle="modal"
                                             data-target="#editKategoriModal">
-                                            <i class="fas fa-edit"></i> Edit
+                                            <i class="fa fa-edit text-white"></i> Edit
                                         </button>
                                         <button class="btn btn-danger delete-btn"
                                             onclick="confirmDelete('{{ $pengajuan->id }}')">
@@ -113,7 +109,7 @@
     <!-- Modal -->
     <div class="modal fade" id="pengajuanBarangModal" tabindex="-1" role="dialog"
         aria-labelledby="pengajuanBarangModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document"> <!-- Tambahkan modal-lg di sini -->
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="pengajuanBarangModalLabel">Tambah Pengajuan Barang</h5>
@@ -123,7 +119,7 @@
                 </div>
                 <form action="{{ route('pengajuanBarang.store') }}" method="POST">
                     @csrf
-                    <div class="modal-body">
+                    <div class="modal-body px-4 py-3"> <!-- Tambah padding di sini -->
                         <div class="form-group">
                             <label for="nama_pengaju">Nama Pengaju</label>
                             <select class="form-control" id="nama_pengaju" name="nama_pengaju" required>
@@ -142,9 +138,9 @@
                             <input type="number" class="form-control" id="qty" name="qty" required>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <div class="modal-footer px-4">
                         <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Batal</button>
                     </div>
                 </form>
             </div>
@@ -153,12 +149,12 @@
 
     <!-- Modal Edit Kategori -->
     <div class="modal fade" id="editKategoriModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document"> 
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Edit Pengajuan Barang</h5>
                 </div>
-                <form id="editForm" action="" method="POST">
+                <form id="editForm" method="POST" action="">
                     @csrf
                     @method('PUT')
                     <div class="modal-body">
@@ -188,8 +184,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="submit" class="btn btn-primary mr-2">Simpan</button>
+                        <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Batal</button>
                     </div>
                 </form>
             </div>

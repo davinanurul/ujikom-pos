@@ -4,7 +4,7 @@
     <div class="container-fluid">
         <div class="card shadow mb-4">
             <div class="card-body">
-                <h3 class="mb-3"><i class="fa fa-truck text-primary mr-2"></i> Form Edit Supplier</h3>
+                <h4 class="mb-3"><i class="fa fa-truck text-primary mr-2"></i> Form Edit Supplier</h4>
                 <form action="{{ route('supplier.update', $supplier->id) }}" method="POST">
                     @csrf
                     @method('PUT')
@@ -24,8 +24,8 @@
                             value="{{ old('alamat', $supplier->alamat) }}" class="form-control" required>
                     </div>
                     <div class="text-end mt-4">
-                        <button type="submit" class="btn btn-primary">Simpan</button>
-                        <a href="{{ route('supplier.index') }}" class="btn btn-secondary me-1">Kembali</a>
+                        <button type="submit" class="btn btn-primary mr-1">Simpan</button>
+                        <a href="{{ route('supplier.index') }}" class="btn btn-outline-primary">Kembali</a>
                     </div>
                 </form>
             </div>

@@ -4,7 +4,7 @@
     <div class="container-fluid">
         <div class="card shadow mb-4">
             <div class="card-body">
-                <h3 class="mb-3"><i class="fa fa-users text-primary mr-2"></i> Form Tambah Member</h3>
+                <h4 class="mb-3"><i class="fa fa-users text-primary mr-2"></i> Form Tambah Member</h4>
                 <form action="{{ route('member.store')}}" method="POST">
                     @csrf
                     <div class="form-group mt-0">
@@ -20,8 +20,8 @@
                         <input type="text" name="alamat" id="alamat" class="form-control" required>
                     </div>
                     <div class="text-end mt-4">
-                        <button type="submit" class="btn btn-primary">Simpan</button>
-                        <a href="{{ route('member.index') }}" class="btn btn-secondary me-1">Kembali</a>
+                        <button type="submit" class="btn btn-primary mr-1">Simpan</button>
+                        <a href="{{ route('member.index') }}" class="btn btn-outline-primary">Kembali</a>
                     </div>
                 </form>
             </div>

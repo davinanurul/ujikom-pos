@@ -3,10 +3,8 @@
 @section('content')
     <div class="container-fluid">
         <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold">Form Data Penerimaan Barang</h6>
-            </div>
             <div class="card-body">
+                <h4 class="mb-3"><i class="fa fa-truck text-primary mr-2"></i> Form Penerimaan Barang</h4>
                 <form action="{{{ route('penerimaan_barang.store')}}}" method="POST">
                     @csrf
                     <div class="form-group mt-0">
@@ -44,8 +42,8 @@
                     </div>
 
                     <div class="text-end mt-4">
-                        <button type="submit" class="btn btn-primary">Simpan</button>
-                        <a href="{{ route('penerimaan_barang.index') }}" class="btn btn-secondary me-1">Kembali</a>
+                        <button type="submit" class="btn btn-primary mr-1">Simpan</button>
+                        <a href="{{ route('penerimaan_barang.index') }}" class="btn btn-outline-primary">Kembali</a>
                     </div>
                 </form>
             </div>

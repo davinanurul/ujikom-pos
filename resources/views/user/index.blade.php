@@ -6,10 +6,10 @@
         <h4 class="mb-0"><i class="fa fa-users text-primary mr-2"></i> Daftar Pengguna</h4>
         <div>
             <a href="{{ route('user.create') }}" class="btn btn-primary">
-                <i class="fa fa-plus"></i> Tambah User
+                <i class="fa fa-plus mr-1"></i> Tambah
             </a>
-            <button class="btn btn-success" onclick="window.print();">
-                <i class="fa fa-print"></i> Print/Ekspor
+            <button class="btn btn-warning text-white" onclick="window.print();">
+                <i class="fa fa-print text-white mr-1"></i> Print/Ekspor
             </button>
         </div>
     </div>
@@ -33,11 +33,11 @@
                             <td class="text-center">{{ $index + 1 }}</td>
                             <td class="text-center">{{ $pengguna->user_nama }}</td>
                             <td class="text-center">{{ $pengguna->user_hak }}</td>
-                            <td class="text-center">{{ $pengguna->created_at }}</td>
+                            <td class="text-center">{{ $pengguna->created_at->format('d F Y') }}</td>
                             <td class="text-center">
-                                <span class="badge badge-{{ $pengguna->user_sts ? 'success' : 'secondary' }}">
+                                <span class="badge badge-{{ $pengguna->user_sts ? 'success' : 'danger' }} px-3 py-1" style="font-size: 0.875rem;">
                                     {{ $pengguna->user_sts ? 'Aktif' : 'Nonaktif' }}
-                                </span>
+                                </span>                                
                             </td>
                             <td class="text-center">
                                 @if ($pengguna->user_sts)

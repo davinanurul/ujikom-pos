@@ -10,7 +10,9 @@ class UserController extends Controller
 {
     public function index()
     {
-        $daftarPengguna = User::all();
+        // Mengambil semua pengguna, kecuali yang memiliki role 'owner'
+        $daftarPengguna = User::where('user_hak', '!=', 'owner')->get();
+
         return view('user.index', compact('daftarPengguna'));
     }
 
@@ -24,7 +26,7 @@ class UserController extends Controller
 
         $validated = $request->validate([
             'user_nama' => 'required|string|max:255|unique:users,user_nama',
-            'user_pass' => 'required|string|min:5',
+            'user_pass' => 'required|string|min:8',
             'user_hak' => 'required|string|in:admin,kasir,owner',
         ]);
 

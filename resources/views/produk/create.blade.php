@@ -3,10 +3,8 @@
 @section('content')
     <div class="container-fluid">
         <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold">Form Tambah Produk</h6>
-            </div>
             <div class="card-body">
+                <h4 class="mb-3"><i class="fa fa-truck text-primary mr-2"></i> Form Tambah Produk</h4>
                 <form action="{{ route('produk.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group mt-0">
@@ -28,7 +26,7 @@
                         </select>
                     </div>
                     <div class="form-group mt-0">
-                        <label for="nama">Nama</label>
+                        <label for="nama">Nama Produk</label>
                         <input type="text" name="nama" id="nama" class="form-control" required>
                     </div>
                     <div class="form-group">
@@ -41,14 +39,15 @@
                             <img id="preview" alt="Pratinjau Gambar" class="img-thumbnail" width="150">
                         </div>
                     </div>
-                    
+
                     <div class="text-end mt-4">
-                        <button type="submit" class="btn btn-primary">Simpan</button>
-                        <a href="{{ route('produk.index') }}" class="btn btn-secondary me-1">Kembali</a>
+                        <button type="submit" class="btn btn-primary mr-1">Simpan</button>
+                        <a href="{{ route('produk.index') }}" class="btn btn-outline-primary">Kembali</a>
                     </div>
                 </form>
             </div>
         </div>
+    </div>
     </div>
 @endsection
 @push('script')

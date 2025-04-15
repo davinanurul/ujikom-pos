@@ -4,13 +4,13 @@
     <div class="container-fluid">
         <div class="card shadow mb-4">
             <div class="card-body">
-                <h3 class="mb-3"><i class="fa fa-users text-primary mr-2"></i> Form Tambah User</h3>
+                <h4 class="mb-3"><i class="fa fa-users text-primary mr-2"></i> Form Tambah User</h4>
                 <form action="{{ route('user.store') }}" method="POST">
                     @csrf
 
                     <!-- Username -->
                     <div class="form-group">
-                        <label for="user_nama" class="form-label">Username</label>
+                        <label for="user_nama" class="form-label">Nama</label>
                         <input type="text" name="user_nama" id="user_nama"
                             class="form-control @error('user_nama') is-invalid @enderror"
                             value="{{ old('user_nama') }}" required maxlength="255">
@@ -44,8 +44,8 @@
 
                     <!-- Tombol -->
                     <div class="text-end mt-4">
-                        <button type="submit" class="btn btn-primary">Simpan</button>
-                        <a href="{{ route('user.index') }}" class="btn btn-secondary me-1">Kembali</a>
+                        <button type="submit" class="btn btn-primary mr-1">Simpan</button>
+                        <a href="{{ route('user.index') }}" class="btn btn-outline-primary">Kembali</a>
                     </div>
                 </form>
             </div>

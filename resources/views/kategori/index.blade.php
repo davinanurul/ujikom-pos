@@ -6,10 +6,10 @@
             <h4 class="mb-0"><i class="fa fa-tags text-primary mr-2"></i> Kategori Produk</h4>
             <div>
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addKategoriModal">
-                    <i class="fa fa-plus"></i> Tambah Kategori
+                    <i class="fa fa-plus mr-1"></i> Tambah
                 </button>
                 <button class="btn btn-warning text-white" onclick="window.print();">
-                    <i class="fa fa-print text-white"></i> Print/Ekspor
+                    <i class="fa fa-print text-white mr-1"></i> Print/Ekspor
                 </button>
             </div>
         </div>
@@ -79,13 +79,13 @@
     </div>
 
     <!-- Modal Edit Kategori -->
-    {{-- <div class="modal fade" id="editKategoriModal" tabindex="-1" role="dialog">
+    <div class="modal fade" id="editKategoriModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Edit Kategori</h5>
                 </div>
-                <form id="editForm" action="{{ route('kategori.update', ['id' => $kategori->id]) }}" method="POST">
+                <form id="editForm" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="modal-body">
@@ -103,10 +103,8 @@
                 </form>
             </div>
         </div>
-    </div> --}}
-@endsection
+    </div>
 
-@push('script')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         document.querySelectorAll('.edit-btn').forEach(button => {
@@ -117,24 +115,6 @@
                 document.getElementById('edit_nama_kategori').value = nama;
                 document.getElementById('editForm').action = `/kategori/${id}`;
             });
-        });
-
-        document.addEventListener("DOMContentLoaded", function() {
-            @if (session('success'))
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil',
-                    text: {!! json_encode(session('success')) !!}
-                });
-            @endif
-
-            @if (session('error'))
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Gagal',
-                    text: {!! json_encode(session('error')) !!}
-                });
-            @endif
         });
 
         document.addEventListener("DOMContentLoaded", function() {
@@ -175,4 +155,4 @@
             });
         });
     </script>
-@endpush
+@endsection

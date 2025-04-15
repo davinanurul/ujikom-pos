@@ -16,12 +16,12 @@
             </div>
             <div class="d-flex">
                 <a href="{{ route('penerimaan_barang.create') }}" class="btn btn-primary rounded mr-2">
-                    <i class="fas fa-plus"></i> Tambah Stok
+                    <i class="fa fa-plus mr-1"></i>Tambah
                 </a>
                 <div class="dropdown">
-                    <button class="btn btn-success rounded dropdown-toggle" type="button" id="exportDropdown"
+                    <button class="btn btn-warning rounded dropdown-toggle text-white" type="button" id="exportDropdown"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-download"></i> Export
+                        <i class="fa fa-print mr-1 text-white"></i>Expor
                     </button>
                     <div class="dropdown-menu" aria-labelledby="exportDropdown">
                         <a class="dropdown-item" href="#" id="exportExcel"><i class="fas fa-file-excel"></i> Export
@@ -78,17 +78,6 @@
 @endsection
 
 @push('script')
-    <!-- DataTables JS -->
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap4.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
-
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             let filterDropdown = document.getElementById('filter-produk');
@@ -116,52 +105,52 @@
             });
         });
 
-        $(document).ready(function() {
-            var selectedProduct = $('#filter-produk option:selected').text(); // Ambil teks produk yang dipilih
-            var title = 'Laporan Varian Produk' + (selectedProduct !== 'Semua Produk' ? ' - ' + selectedProduct :
-                '');
+        // $(document).ready(function() {
+        //     var selectedProduct = $('#filter-produk option:selected').text(); // Ambil teks produk yang dipilih
+        //     var title = 'Laporan Varian Produk' + (selectedProduct !== 'Semua Produk' ? ' - ' + selectedProduct :
+        //         '');
 
-            var table = $('#varianTable').DataTable({
-                dom: "<'row'<'col-md-6'l><'col-md-6'f>>" +
-                    "<'row'<'col-sm-12'tr>>" +
-                    "<'row'<'col-md-6'i><'col-md-6'p>>",
-                buttons: [{
-                        extend: 'excelHtml5',
-                        className: 'btn btn-success',
-                        title: title // Gunakan title dinamis
-                    },
-                    {
-                        extend: 'pdfHtml5',
-                        className: 'btn btn-danger',
-                        title: title // Gunakan title dinamis
-                    },
-                    {
-                        extend: 'print',
-                        className: 'btn btn-primary',
-                        title: title // Gunakan title dinamis
-                    }
-                ],
-                responsive: true,
-                lengthChange: true,
-                autoWidth: false,
-                pagingType: "simple_numbers",
-                language: {
-                    url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/Indonesian.json"
-                }
-            });
+        //     var table = $('#varianTable').DataTable({
+        //         dom: "<'row'<'col-md-6'l><'col-md-6'f>>" +
+        //             "<'row'<'col-sm-12'tr>>" +
+        //             "<'row'<'col-md-6'i><'col-md-6'p>>",
+        //         buttons: [{
+        //                 extend: 'excelHtml5',
+        //                 className: 'btn btn-success',
+        //                 title: title // Gunakan title dinamis
+        //             },
+        //             {
+        //                 extend: 'pdfHtml5',
+        //                 className: 'btn btn-danger',
+        //                 title: title // Gunakan title dinamis
+        //             },
+        //             {
+        //                 extend: 'print',
+        //                 className: 'btn btn-primary',
+        //                 title: title // Gunakan title dinamis
+        //             }
+        //         ],
+        //         responsive: true,
+        //         lengthChange: true,
+        //         autoWidth: false,
+        //         pagingType: "simple_numbers",
+        //         language: {
+        //             url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/Indonesian.json"
+        //         }
+        //     });
 
-            // Fungsi Export saat dropdown diklik
-            $('#exportExcel').click(function() {
-                table.button(0).trigger();
-            });
+        //     // Fungsi Export saat dropdown diklik
+        //     $('#exportExcel').click(function() {
+        //         table.button(0).trigger();
+        //     });
 
-            $('#exportPDF').click(function() {
-                table.button(1).trigger();
-            });
+        //     $('#exportPDF').click(function() {
+        //         table.button(1).trigger();
+        //     });
 
-            $('#exportPrint').click(function() {
-                table.button(2).trigger();
-            });
-        });
+        //     $('#exportPrint').click(function() {
+        //         table.button(2).trigger();
+        //     });
+        // });
     </script>
 @endpush

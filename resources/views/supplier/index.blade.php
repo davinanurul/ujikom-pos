@@ -6,10 +6,10 @@
         <h4 class="mb-0"><i class="fa fa-truck text-primary mr-2"></i> Data Supplier</h4>
         <div>
             <a href="{{ route('supplier.create') }}" class="btn btn-primary">
-                <i class="fa fa-plus"></i> Tambah Supplier
+                <i class="fa fa-plus mr-1"></i> Tambah Supplier
             </a>
-            <button class="btn btn-success" onclick="window.print();">
-                <i class="fa fa-print"></i> Print/Ekspor
+            <button class="btn btn-warning text-white" onclick="window.print();">
+                <i class="fa fa-print text-white mr-1"></i> Print/Ekspor
             </button>
         </div>
     </div>
@@ -34,8 +34,8 @@
                             <td class="text-center">{{ $supplier->kontak }}</td>
                             <td class="text-center">{{ $supplier->alamat }}</td>
                             <td class="text-center">
-                                <a href="{{ route('supplier.edit', $supplier->id) }}" class="btn btn-warning btn-sm">
-                                    <i class="fa fa-edit"></i> Edit
+                                <a href="{{ route('supplier.edit', $supplier->id) }}" class="btn btn-sm btn-success text-white">
+                                    <i class="fa fa-edit text-white"></i> Edit
                                 </a>
                             </td>
                         </tr>
