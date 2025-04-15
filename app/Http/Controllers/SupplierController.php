@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Supplier;
 use Illuminate\Http\Request;
+use App\Imports\SupplierImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SupplierController extends Controller
 {
@@ -58,5 +60,19 @@ class SupplierController extends Controller
         ]);
 
         return redirect()->route('supplier.index')->with('success', 'Supplier berhasil diperbarui.');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv',
+        ]);
+
+        try {
+            Excel::import(new SupplierImport, $request->file('file'));
+            return redirect()->route('supplier.index')->with('success', 'Data supplier berhasil diimpor.');
+        } catch (\Exception $e) {
+            return redirect()->route('supplier.index')->with('error', 'Gagal mengimpor data: ' . $e->getMessage());
+        }
     }
 }

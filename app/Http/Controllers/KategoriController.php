@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Kategori;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log; // Import log facade
+use Illuminate\Support\Facades\Log;
+use App\Imports\KategoriImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class KategoriController extends Controller
 {
@@ -65,5 +67,19 @@ class KategoriController extends Controller
     {
         $kategori = Kategori::findOrFail($id); // Mendapatkan kategori berdasarkan ID
         return response()->json(['kategori' => $kategori]);
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls,csv',
+        ]);
+
+        try {
+            Excel::import(new KategoriImport, $request->file('file'));
+            return redirect()->route('kategori.index')->with('success', 'Data kategori berhasil diimpor!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat impor: ' . $e->getMessage());
+        }
     }
 }

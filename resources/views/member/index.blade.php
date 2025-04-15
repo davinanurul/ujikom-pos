@@ -9,7 +9,11 @@
                     <i class="fa fa-plus mr-1"></i> Tambah
                 </a>
                 <button class="btn btn-warning text-white" onclick="window.print();">
-                    <i class="fa fa-print text-white mr-1"></i> Print/Ekspor
+                    <i class="fa fa-print text-white mr-1"></i>Ekspor
+                </button>
+                <button type="button" class="btn btn-primary text-white" data-toggle="modal"
+                    data-target="#importMemberModal">
+                    <i class="fa fa-file mr-1"></i> Impor
                 </button>
             </div>
         </div>
@@ -72,6 +76,37 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Modal Import Excel -->
+    <div class="modal fade" id="importMemberModal" tabindex="-1" role="dialog"
+        aria-labelledby="importMemberModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <form action="{{ route('member.import') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="importMemberModalLabel">Impor Member dari Excel</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Tutup">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="file">Pilih File Excel</label>
+                            <input type="file" name="file" class="form-control" required>
+                            <small class="text-muted">File harus berekstensi .xls atau .xlsx</small>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Impor</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 

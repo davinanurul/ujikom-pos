@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Member;
+use App\Imports\MemberImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class MemberController extends Controller
 {
@@ -74,5 +76,20 @@ class MemberController extends Controller
         $member->save();
 
         return redirect()->route('member.index')->with('success', 'Pengguna berhasil diaktifkan.');
+    }
+
+    // Mengimpor data dari file Excel
+    public function import(Request $request)
+    {
+        // Validasi file yang diunggah
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv',
+        ]);
+
+        // Memproses impor data dari file Excel
+        Excel::import(new MemberImport, $request->file('file'));
+
+        // Redirect kembali setelah impor berhasil
+        return redirect()->route('member.index')->with('success', 'Data member berhasil diimpor!');
     }
 }

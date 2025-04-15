@@ -52,12 +52,13 @@ Route::middleware(['auth', CekUserRole::class])->group(function () {
     Route::put('/member/{id}', [MemberController::class, 'update'])->name('member.update');
     Route::get('/nonaktifkan-member/{memberId}', [MemberController::class, 'nonaktifkanAkun'])->name('member.nonaktifkan');
     Route::get('/aktifkan-member/{memberId}', [MemberController::class, 'aktifkanAkun'])->name('member.aktifkan');
+    Route::post('member/import', [MemberController::class, 'import'])->name('member.import');
 
     // Kategori
     Route::get('kategori', [KategoriController::class, 'index'])->name('kategori.index');
     Route::post('kategori/store', [KategoriController::class, 'store'])->name('kategori.store');
     Route::put('kategori/{id}', [KategoriController::class, 'update'])->name('kategori.update');
-
+    Route::post('/kategori/import', [KategoriController::class, 'import'])->name('kategori.import');
 
     // Supplier
     Route::get('supplier', [SupplierController::class, 'index'])->name('supplier.index');
@@ -65,6 +66,7 @@ Route::middleware(['auth', CekUserRole::class])->group(function () {
     Route::post('supplier/store', [SupplierController::class, 'store'])->name('supplier.store');
     Route::get('supplier/{id}/edit', [SupplierController::class, 'edit'])->name('supplier.edit');
     Route::put('/supplier/{id}', [SupplierController::class, 'update'])->name('supplier.update');
+    Route::post('/supplier/import', [SupplierController::class, 'import'])->name('supplier.import');
 
     // Produk
     Route::get('produk', [ProdukController::class, 'index'])->name('produk.index');
