@@ -104,54 +104,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Modal Tambah Kategori -->
-    <div class="modal fade" id="addKategoriModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Tambah Kategori Baru</h5>
-                </div>
-                <form action="{{ route('kategori.store') }}" method="POST">
-                    @csrf
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label>Nama Kategori</label>
-                            <input type="text" class="form-control" name="nama_kategori" required>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn mb-1 btn-outline-primary" data-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn mb-1 btn-primary">Simpan</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Tambah Kategori -->
-    <div class="modal fade" id="addKategoriModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Tambah Kategori Baru</h5>
-                </div>
-                <form action="{{ route('kategori.store') }}" method="POST">
-                    @csrf
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label>Nama Kategori</label>
-                            <input type="text" class="form-control" name="nama_kategori" required>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn mb-1 btn-outline-primary" data-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn mb-1 btn-primary">Simpan</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
     <!-- Modal -->
     <div class="modal fade" id="produkModal" tabindex="-1" aria-labelledby="produkModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">

@@ -13,6 +13,7 @@ class ProdukVarian extends Model
 
     protected $fillable = [
         'id_produk',
+        'sku',
         'size',
         'warna',
         'stok',
@@ -27,5 +28,17 @@ class ProdukVarian extends Model
     public function detailTransaksi()
     {
         return $this->hasMany(DetailTransaksi::class, 'id_varian', 'id');
+    }
+
+    public static function generateSKU($kodeProduk, $warna, $size)
+    {
+        // Ambil 3 huruf pertama dari warna tanpa spasi, uppercase
+        $warnaCode = strtoupper(substr(preg_replace('/\s+/', '', $warna), 0, 3));
+
+        // Size uppercase
+        $sizeCode = strtoupper($size);
+
+        // Gabungkan menjadi SKU
+        return "{$kodeProduk}-{$warnaCode}-{$sizeCode}";
     }
 }

@@ -79,7 +79,7 @@
     </div>
 
     <!-- Modal Edit Kategori -->
-    <div class="modal fade" id="editKategoriModal" tabindex="-1" role="dialog">
+    {{-- <div class="modal fade" id="editKategoriModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -103,7 +103,7 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div> --}}
 @endsection
 
 @push('script')
@@ -153,6 +153,26 @@
                     text: {!! json_encode(session('error')) !!}
                 });
             @endif
+        });
+
+        $(document).on('click', '.edit-btn', function() {
+            var kategoriId = $(this).data('id'); // Ambil ID kategori dari tombol
+
+            // Mengambil data kategori melalui Ajax
+            $.ajax({
+                url: '/kategori/' + kategoriId + '/edit', // Sesuaikan dengan route yang sesuai
+                type: 'GET',
+                success: function(data) {
+                    // Isi form modal dengan data yang diterima
+                    $('#editForm').attr('action', '/kategori/' + data.kategori.id);
+                    $('#kategori_name').val(data.kategori.name);
+                    // Lanjutkan untuk mengisi input lainnya jika ada
+                    $('#editModal').modal('show'); // Tampilkan modal
+                },
+                error: function() {
+                    alert('Error retrieving data.');
+                }
+            });
         });
     </script>
 @endpush

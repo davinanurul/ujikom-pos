@@ -31,7 +31,7 @@ class Produk extends Model
     public static function generateKodeBarang()
     {
         $currentYear = Carbon::now()->format('Y');
-        $prefix = 'CLTH' . $currentYear;
+        $prefix = 'BG' . $currentYear; // Ganti prefix menjadi BG+tahun
 
         // Ambil kode barang terakhir yang dimulai dengan prefix
         $lastKode = self::where('kode', 'like', "$prefix%")
@@ -47,8 +47,8 @@ class Produk extends Model
             $newNumber = 1;
         }
 
-        // Format nomor urut menjadi 4 digit
-        $formattedNumber = str_pad($newNumber, 4, '0', STR_PAD_LEFT);
+        // Format nomor urut menjadi 3 digit
+        $formattedNumber = str_pad($newNumber, 3, '0', STR_PAD_LEFT);
 
         // Gabungkan prefix dengan nomor urut baru
         return $prefix . $formattedNumber;

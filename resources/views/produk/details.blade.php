@@ -21,7 +21,8 @@
                     <thead class="thead-light">
                         <tr>
                             <th class="text-center">No</th>
-                            <th class="text-center">Gambar</th>
+                            <th class="text-center">SKU</th>
+                            <th class="text-center">Barcode</th>
                             <th class="text-center">Nama Produk</th>
                             <th class="text-center">Size</th>
                             <th class="text-center">Warna</th>
@@ -34,12 +35,9 @@
                         @forelse ($produkVarians as $index => $varian)
                             <tr>
                                 <td class="text-center align-middle">{{ $index + 1 }}</td>
+                                <td class="text-center align-middle">{{ $varian->sku }}</td>
                                 <td class="text-center align-middle">
-                                    @if($varian->gambar)
-                                        <img src="{{ asset('storage/' . $varian->gambar) }}" alt="Gambar Produk" class="img-thumbnail" style="width: 75px; height: 75px; object-fit: cover;">
-                                    @else
-                                        <span class="text-muted">Tidak Ada Gambar</span>
-                                    @endif
+                                    {!! DNS1D::getBarcodeHTML($produk->kode, 'C128', 1.5, 50) !!}
                                 </td>
                                 <td class="text-center align-middle">{{ $varian->produk->nama }}</td>
                                 <td class="text-center align-middle">{{ $varian->size }}</td>

@@ -37,22 +37,33 @@ class ProdukVarianController extends Controller
 
     public function store(Request $request)
     {
+        // Validasi data yang diterima dari form
         $request->validate([
-            'id_produk'  => 'required|exists:produk,id',
-            'size'       => 'required|in:S,M,L,XL',
-            'warna'      => 'required|string|max:50',
-            'harga_jual' => 'required|numeric|min:0',
+            'id_produk'  => 'required|exists:produk,id', // Pastikan id_produk ada di tabel produk
+            'size'       => 'required|in:S,M,L,XL', // Pastikan size yang diterima valid
+            'warna'      => 'required|string|max:50', // Pastikan warna berupa string
+            'harga_jual' => 'required|numeric|min:0', // Pastikan harga jual valid
         ]);
 
+        // Ambil produk berdasarkan id_produk
+        $produk = Produk::findOrFail($request->id_produk);
+
+        // Generate SKU berdasarkan kode produk, warna, dan size
+        $sku = ProdukVarian::generateSKU($produk->kode, $request->warna, $request->size);
+
+        // Simpan varian produk ke dalam database
         ProdukVarian::create([
             'id_produk'  => $request->id_produk,
             'size'       => $request->size,
             'warna'      => $request->warna,
             'harga_jual' => $request->harga_jual,
+            'sku'        => $sku, // Simpan SKU yang sudah di-generate
         ]);
 
+        // Redirect kembali dengan pesan sukses
         return redirect()->route('produk_varian.index')->with('success', 'Varian produk berhasil ditambahkan.');
     }
+
 
     public function exportPDF(Request $request)
     {

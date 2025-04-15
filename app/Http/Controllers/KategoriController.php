@@ -11,10 +11,10 @@ class KategoriController extends Controller
     public function index()
     {
         $kategoris = Kategori::orderBy('created_at', 'desc')->get();
-        
+
         // Menambahkan log ketika data kategori diambil
         Log::info('Menampilkan daftar kategori', ['total_kategori' => $kategoris->count()]);
-        
+
         return view('kategori.index', compact('kategoris'));
     }
 
@@ -59,5 +59,11 @@ class KategoriController extends Controller
         Log::info('Kategori berhasil diperbarui', ['id' => $id, 'nama_kategori' => $validated['nama_kategori']]);
 
         return redirect()->route('kategori.index')->with('success', 'Kategori berhasil diperbarui!');
+    }
+
+    public function showModal($id)
+    {
+        $kategori = Kategori::findOrFail($id); // Mendapatkan kategori berdasarkan ID
+        return response()->json(['kategori' => $kategori]);
     }
 }

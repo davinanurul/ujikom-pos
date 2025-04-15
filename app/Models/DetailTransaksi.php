@@ -34,4 +34,10 @@ class DetailTransaksi extends Model
     {
         return $this->belongsTo(ProdukVarian::class, 'id_varian', 'id');
     }
+
+    // Model DetailTransaksi
+    public function produkVarian()
+    {
+        return $this->belongsTo(ProdukVarian::class, 'id_varian');
+    }
 }

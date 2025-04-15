@@ -10,13 +10,13 @@ return new class extends Migration {
     {
         Schema::create('produk_varian', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_produk')->constrained('produk')->onDelete('cascade');
-            $table->string('size', 10);
-            $table->string('warna', 50);
-            $table->integer('stok')->default(0);
-            $table->bigInteger('harga_jual');
-            $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
-            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'));
+            $table->foreignId('id_produk')->constrained('produk')->onDelete('cascade'); // Relasi dengan tabel produk
+            $table->string('size', 10); // Menyimpan size varian (misal: S, M, L, XL)
+            $table->string('warna', 50); // Menyimpan warna varian
+            $table->integer('stok')->default(0); // Menyimpan jumlah stok varian
+            $table->bigInteger('harga_jual'); // Menyimpan harga jual varian
+            $table->string('sku')->unique(); // Menyimpan SKU yang unik berdasarkan kombinasi produk, warna, dan size
+            $table->timestamps(); // Timestamp untuk created_at dan updated_at
         });
     }
 

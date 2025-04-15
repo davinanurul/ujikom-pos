@@ -60,9 +60,9 @@ class TransaksiController extends Controller
             'harga' => 'required|array',
             'subtotal' => 'required|array',
         ]);
-    
+
         $nomor_transaksi = Transaksi::generateNomorTransaksi();
-    
+
         $transaksi = Transaksi::create([
             'nomor_transaksi' => $nomor_transaksi,
             'tanggal' => now(),
@@ -71,14 +71,14 @@ class TransaksiController extends Controller
             'total' => preg_replace('/[^\d]/', '', $request->total),
             'user_id' => Auth::id(),
         ]);
-    
+
         foreach ($request->produk_id as $index => $produk_id) {
             $varian = ProdukVarian::where([
                 'id_produk' => $produk_id,
                 'warna' => $request->warna[$index],
                 'size' => $request->size[$index],
             ])->first();
-    
+
             if ($varian) {
                 $transaksi->DetailTransaksi()->create([
                     'produk_id' => $produk_id,
@@ -87,38 +87,55 @@ class TransaksiController extends Controller
                     'harga' => preg_replace('/[^\d]/', '', $request->harga[$index]),
                     'subtotal' => preg_replace('/[^\d]/', '', $request->subtotal[$index]),
                 ]);
-    
+
                 // Kurangi stok
                 $varian->stok -= $request->qty[$index];
                 $varian->save();
             }
         }
-    
+
         try {
             $connector = new WindowsPrintConnector("POS-58"); // Ganti dengan nama printer kamu
             $connector->finalize();
             $printer = new Printer($connector);
-        
+
             $printer->setJustification(Printer::JUSTIFY_CENTER);
-            $printer->text("Toko Davina\n");
+            $printer->text("The Market\n");
             $printer->text("Jl. Pasarean 01/12\n");
             $printer->feed();
-        
+
             $printer->setJustification(Printer::JUSTIFY_LEFT);
             $printer->text("Tanggal: " . $transaksi->created_at->format('d-m-Y H:i') . "\n");
             $printer->text("No Transaksi: #" . $transaksi->id . "\n");
             $printer->text("--------------------------------\n");
-        
+
+            // Loop untuk detail transaksi
             foreach ($transaksi->detailTransaksi as $item) {
-                $line = sprintf("%-15s %5d x %5d\n", $item->produk->nama, $item->qty, $item->harga);
-                $printer->text($line);
+                // Ambil nama produk, warna, dan ukuran dari relasi produk dan produkVarian
+                $namaProduk = $item->produk->nama;
+                $warna = $item->produkVarian->warna; // Ambil warna dari relasi ProdukVarian
+                $ukuran = $item->produkVarian->size; // Ambil ukuran dari relasi ProdukVarian
+
+                // Format line yang akan dicetak
+                $line = sprintf("%-15s %5d x %5d", $namaProduk, $item->qty, $item->harga);
+
+                // Menambahkan warna dan ukuran jika ada
+                if ($warna) {
+                    $line .= " " . $warna;
+                }
+                if ($ukuran) {
+                    $line .= " " . $ukuran;
+                }
+
+                $printer->text($line . "\n");
             }
-        
+
+
             $printer->text("--------------------------------\n");
             $printer->setJustification(Printer::JUSTIFY_RIGHT);
             $printer->text("Total: Rp " . number_format($transaksi->total, 0, ',', '.') . "\n");
             $printer->feed(2);
-        
+
             $printer->setJustification(Printer::JUSTIFY_CENTER);
             $printer->text("Terima kasih!\n");
             $printer->pulse();
@@ -130,15 +147,13 @@ class TransaksiController extends Controller
                 $printer->close();
             }
         }
-        
-    
+
         return response()->json([
             'success' => true,
             'message' => 'Transaksi berhasil dibuat',
             'transaksi_id' => $transaksi->id,
         ]);
     }
-    
 
     public function getVariansByProduk($produkId)
     {
@@ -224,39 +239,38 @@ class TransaksiController extends Controller
     public function struk($id)
     {
         $transaksi = Transaksi::with('detailTransaksi')->findOrFail($id);
-    
+
         // Buat koneksi ke printer (nama printer harus sesuai dengan yang ada di Windows)
         $connector = new WindowsPrintConnector("POS-80"); // Ganti dengan nama printer kamu
         $printer = new Printer($connector);
-    
+
         // Contoh cetak struk
         $printer->setJustification(Printer::JUSTIFY_CENTER);
         $printer->text("Toko Ujikom\n");
         $printer->text("Jl. Contoh Alamat\n");
         $printer->feed();
-    
+
         $printer->setJustification(Printer::JUSTIFY_LEFT);
         $printer->text("Tanggal: " . $transaksi->created_at->format('d-m-Y H:i') . "\n");
         $printer->text("No Transaksi: #" . $transaksi->id . "\n");
         $printer->text("--------------------------------\n");
-    
+
         foreach ($transaksi->detailTransaksi as $item) {
             $line = sprintf("%-15s %5d x %5d\n", $item->produk->nama, $item->qty, $item->harga);
             $printer->text($line);
         }
-    
+
         $printer->text("--------------------------------\n");
         $printer->setJustification(Printer::JUSTIFY_RIGHT);
         $printer->text("Total: Rp " . number_format($transaksi->total, 0, ',', '.') . "\n");
         $printer->feed(2);
-    
+
         $printer->setJustification(Printer::JUSTIFY_CENTER);
         $printer->text("Terima kasih!\n");
-    
+
         $printer->cut();
         $printer->close();
-    
+
         return back()->with('success', 'Struk berhasil dicetak.');
     }
-    
 }
