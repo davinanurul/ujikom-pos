@@ -17,6 +17,7 @@ class AbsensiKerjaController extends Controller
 
     public function store(Request $request)
     {
+        // Validasi input
         $request->validate([
             'nama_karyawan' => 'required|string|max:255',
             'tanggal_masuk' => 'required|date',
@@ -24,6 +25,7 @@ class AbsensiKerjaController extends Controller
             'status_masuk' => 'required|in:masuk,sakit,cuti',
         ]);
 
+        // Siapkan data untuk disimpan
         $data = [
             'nama_karyawan' => $request->nama_karyawan,
             'tanggal_masuk' => $request->tanggal_masuk,
@@ -31,13 +33,18 @@ class AbsensiKerjaController extends Controller
             'status_masuk' => $request->status_masuk,
         ];
 
+        // Jika status sakit atau cuti, set waktu_selesai_kerja
         if (in_array($request->status_masuk, ['sakit', 'cuti'])) {
             $data['waktu_selesai_kerja'] = '00:00:00';
         }
 
+        // Simpan data
         AbsensiKerja::create($data);
-        return redirect()->back()->with('success', 'Data berhasil di simpan');
+
+        // Kembali dengan pesan sukses
+        return redirect()->back()->with('success', 'Data berhasil disimpan');
     }
+
 
     public function update(Request $request, $id)
     {
@@ -51,7 +58,7 @@ class AbsensiKerjaController extends Controller
         $absensi = AbsensiKerja::findOrFail($id);
 
         $absensi->update([
-           'nama_karyawan' => $request->nama_karyawan,
+            'nama_karyawan' => $request->nama_karyawan,
             'tanggal_masuk' => $request->tanggal_masuk,
             'waktu_masuk' => $request->waktu_masuk,
             'status_masuk' => $request->status_masuk,
@@ -69,6 +76,5 @@ class AbsensiKerjaController extends Controller
         $absensi = AbsensiKerja::findOrFail($id);
         $absensi->delete();
         return redirect()->route('absen.index')->with('success', 'Data berhasil dihapus');
-
     }
 }
