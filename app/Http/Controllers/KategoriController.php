@@ -10,6 +10,8 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class KategoriController extends Controller
 {
+
+    // function yang mengembalikan nilai, berupa view
     public function index()
     {
         $kategoris = Kategori::orderBy('created_at', 'desc')->get();
@@ -69,6 +71,7 @@ class KategoriController extends Controller
         return redirect()->route('kategori.index')->with('success', 'Kategori berhasil diperbarui!');
     }
 
+    // function yang mengambalikan nilai,berupa json
     public function showModal($id)
     {
         $kategori = Kategori::findOrFail($id); // Mendapatkan kategori berdasarkan ID

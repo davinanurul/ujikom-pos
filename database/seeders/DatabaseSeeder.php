@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
 
         DB::table('users')->insert([
             [
-                'user_nama' => 'owner',
+                'user_nama' => 'Davina',
                 'user_pass' => Hash::make('owner'),
                 'user_hak' => 'owner',
                 'user_sts' => '1'

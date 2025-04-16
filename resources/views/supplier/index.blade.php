@@ -59,7 +59,7 @@
     <div class="modal fade" id="importSupplierModal" tabindex="-1" role="dialog"
         aria-labelledby="importSupplierModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <form action="{{ route('member.import') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('supplier.import') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">

@@ -114,13 +114,14 @@ class TransaksiController extends Controller
             $printer = new Printer($connector);
 
             $printer->setJustification(Printer::JUSTIFY_CENTER);
-            $printer->text("The Market\n");
+            $printer->text("Busana Bumi\n");
             $printer->text("Jl. Pasarean 01/12\n");
             $printer->feed();
 
             $printer->setJustification(Printer::JUSTIFY_LEFT);
             $printer->text("Tanggal     : " . $transaksi->created_at->format('d-m-Y H:i') . "\n");
-            $printer->text("No. Transaksi: #" . $transaksi->nomor_transaksi . "\n");
+            $printer->text("No. Transaksi: " . $transaksi->nomor_transaksi . "\n");
+            $printer->text("Kasir         : " . $transaksi->user->user_nama . "\n");
             $printer->text("--------------------------------\n");
 
             foreach ($transaksi->detailTransaksi as $item) {
