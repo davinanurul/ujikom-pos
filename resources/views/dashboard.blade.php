@@ -80,7 +80,7 @@
         </div>
     </div>
 @endsection
-@push('scripts')
+@push('script')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             fetch("{{ url('/transaksi-harian') }}")

@@ -42,6 +42,12 @@ class KategoriController extends Controller
         return redirect()->route('kategori.index')->with('success', 'Kategori berhasil ditambahkan!');
     }
 
+    public function edit($id)
+    {
+        $kategori = Kategori::findOrFail($id);
+        return view('kategori.edit', compact('kategori'));
+    }
+
     public function update(Request $request, $id)
     {
         $kategori = Kategori::findOrFail($id);

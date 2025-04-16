@@ -37,11 +37,9 @@
                                             <td class="text-center">{{ $index + 1 }}</td>
                                             <td class="text-center">{{ $kategori->nama_kategori }}</td>
                                             <td class="text-center">
-                                                <button class="btn btn-success btn edit-btn text-white"
-                                                    data-id="{{ $kategori->id }}" data-nama="{{ $kategori->nama_kategori }}"
-                                                    data-toggle="modal" data-target="#editKategoriModal">
+                                                <a href="{{ route('kategori.edit', $kategori->id) }}" class="btn btn-success text-white">
                                                     <i class="fa fa-edit text-white"></i> Edit
-                                                </button>
+                                                </a>                                                
                                             </td>
                                         </tr>
                                     @empty
