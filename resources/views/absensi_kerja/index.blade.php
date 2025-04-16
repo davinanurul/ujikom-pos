@@ -8,11 +8,14 @@
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createAbsensiModal">
                     <i class="fa fa-plus mr-1"></i> Tambah
                 </button>
-                <button class="btn btn-warning text-white" onclick="window.print();">
-                    <i class="fa fa-print text-white mr-1"></i>Ekspor
-                </button>
+                <a href="{{ route('absen.export.pdf') }}" class="btn btn-danger">
+                    <i class="fa fa-file-pdf"></i> Export PDF
+                </a>
+                <a href="{{ route('absensi.export') }}" class="btn btn-success">
+                    <i class="fa fa-file-excel"></i> Export Excel
+                </a>
                 <button type="button" class="btn btn-primary text-white" data-toggle="modal"
-                    data-target="#importKategoriModal">
+                    data-target="#importAbsenKerjaModal">
                     <i class="fa fa-file mr-1"></i> Impor
                 </button>
             </div>
@@ -185,6 +188,37 @@
                     </div>
                 </form>
             </div>
+        </div>
+    </div>
+
+    <!-- Modal Import Excel -->
+    <div class="modal fade" id="importAbsenKerjaModal" tabindex="-1" role="dialog"
+        aria-labelledby="importAbsenKerjaModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <form action="{{ route('absen.import') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="importMemberModalLabel">Impor Data Absensi dari Excel</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Tutup">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="file">Pilih File Excel</label>
+                            <input type="file" name="file" class="form-control" required>
+                            <small class="text-muted">File harus berekstensi .xls atau .xlsx</small>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Impor</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 

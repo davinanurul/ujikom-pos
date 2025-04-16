@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\AbsensiKerja;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use App\Exports\AbsensiKerjaExport;
+use App\Imports\AbsensiImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AbsensiKerjaController extends Controller
 {
@@ -17,7 +21,6 @@ class AbsensiKerjaController extends Controller
 
     public function store(Request $request)
     {
-        // Validasi input
         $request->validate([
             'nama_karyawan' => 'required|string|max:255',
             'tanggal_masuk' => 'required|date',
@@ -25,7 +28,6 @@ class AbsensiKerjaController extends Controller
             'status_masuk' => 'required|in:masuk,sakit,cuti',
         ]);
 
-        // Siapkan data untuk disimpan
         $data = [
             'nama_karyawan' => $request->nama_karyawan,
             'tanggal_masuk' => $request->tanggal_masuk,
@@ -38,10 +40,8 @@ class AbsensiKerjaController extends Controller
             $data['waktu_selesai_kerja'] = '00:00:00';
         }
 
-        // Simpan data
         AbsensiKerja::create($data);
 
-        // Kembali dengan pesan sukses
         return redirect()->back()->with('success', 'Data berhasil disimpan');
     }
 
@@ -82,10 +82,38 @@ class AbsensiKerjaController extends Controller
     {
         $absensi = AbsensiKerja::findOrFail($id);
 
-        // Perbarui waktu selesai dengan waktu saat ini
         $absensi->waktu_selesai_kerja = now();
-        $absensi->save(); 
+        $absensi->save();
 
         return response()->json(['success' => true]);
+    }
+
+    public function exportPdf()
+    {
+        $absensi = AbsensiKerja::all();
+
+        $pdf = Pdf::loadView('absensi_kerja.pdf', compact('absensi'))->setPaper('a4', 'landscape');
+        return $pdf->download('laporan-absensi.pdf');
+    }
+
+    public function export()
+    {
+        return Excel::download(new AbsensiKerjaExport, 'absensi_kerja.xlsx');
+    }
+
+    public function import(Request $request)
+    {
+        // Validasi file yang diunggah
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv|max:2048',
+        ]);
+
+        // Proses impor file
+        try {
+            Excel::import(new AbsensiImport, $request->file('file'));
+            return redirect()->back()->with('success', 'Data absensi berhasil diimpor.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 }

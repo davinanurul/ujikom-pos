@@ -124,5 +124,7 @@ Route::middleware(['auth', CekUserRole::class])->group(function () {
     Route::put('/absen-kerja/{id}/update', [AbsensiKerjaController::class, 'update'])->name('absen.update');
     Route::delete('/absen-kerja/{id}', [AbsensiKerjaController::class, 'destroy'])->name('absen.destroy');
     Route::put('/absensi/{id}/update-waktu-selesai', [AbsensiKerjaController::class, 'updateWaktuSelesai']);
-
+    Route::get('/absen/export/pdf', [AbsensiKerjaController::class, 'exportPdf'])->name('absen.export.pdf');
+    Route::get('/export-absensi', [AbsensiKerjaController::class, 'export'])->name('absensi.export');
+    Route::post('/absen/import', [AbsensiKerjaController::class, 'import'])->name('absen.import');
 });
