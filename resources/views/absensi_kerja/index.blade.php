@@ -44,8 +44,14 @@
                                             <td class="text-center">{{ $absensi->waktu_masuk }}</td>
                                             <td class="text-center">{{ $absensi->status_masuk }}</td>
                                             <td class="text-center">
-                                                {!! $absensi->waktu_selesai ?? '<button class="btn btn-sm  btn-primary">Selesai</button>' !!}
+                                                @if ($absensi->waktu_selesai_kerja)
+                                                    {{ $absensi->waktu_selesai_kerja }}
+                                                @else
+                                                    <button class="btn btn-sm btn-primary"
+                                                        onclick="updateWaktuSelesai({{ $absensi->id }})">Selesai</button>
+                                                @endif
                                             </td>
+
                                             <td class="text-center">
                                                 <button class=" edit-btn btn btn-sm btn-success text-white"
                                                     data-toggle="modal" data-target="#editAbsensiModal{{ $absensi->id }}">
@@ -222,15 +228,15 @@
                 success: function(data) {
                     // Isi form modal dengan data yang diterima
                     $('#editAbsensiModal' + absensiId + ' form').attr('action', '/absensi/' +
-                    absensiId); // Update action form dengan ID yang benar
+                        absensiId); // Update action form dengan ID yang benar
                     $('#editAbsensiModal' + absensiId + ' #nama_karyawan').val(data.absensi
                         .nama_karyawan); // Mengisi Nama Karyawan
                     $('#editAbsensiModal' + absensiId + ' #tanggal_masuk').val(data.absensi
                         .tanggal_masuk); // Mengisi Tanggal Masuk
                     $('#editAbsensiModal' + absensiId + ' #waktu_masuk').val(data.absensi
-                    .waktu_masuk); // Mengisi Waktu Masuk
+                        .waktu_masuk); // Mengisi Waktu Masuk
                     $('#editAbsensiModal' + absensiId + ' #status_masuk').val(data.absensi
-                    .status_masuk); // Mengisi Status Masuk
+                        .status_masuk); // Mengisi Status Masuk
                     $('#editAbsensiModal' + absensiId).modal('show'); // Tampilkan modal
                 },
                 error: function() {
@@ -257,6 +263,49 @@
                 if (result.isConfirmed) {
                     // Jika user konfirmasi, kirim form untuk menghapus
                     event.target.closest('form').submit();
+                }
+            });
+        }
+    </script>
+    <script>
+        function updateWaktuSelesai(id) {
+            Swal.fire({
+                title: 'Yakin ingin menyelesaikan?',
+                text: "Data akan diperbarui dengan waktu sekarang.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, update sekarang!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/absensi/' + id + '/update-waktu-selesai',
+                        method: 'PUT',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            waktu_selesai: new Date().toISOString()
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Berhasil!',
+                                text: 'Waktu selesai telah diperbarui.',
+                                icon: 'success',
+                                timer: 1500,
+                                showConfirmButton: false
+                            }).then(() => {
+                                location.reload();
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire(
+                                'Gagal!',
+                                'Terjadi kesalahan saat memperbarui data.',
+                                'error'
+                            );
+                        }
+                    });
                 }
             });
         }

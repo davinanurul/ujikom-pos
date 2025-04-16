@@ -123,4 +123,6 @@ Route::middleware(['auth', CekUserRole::class])->group(function () {
     Route::post('/absen-kerja/create', [AbsensiKerjaController::class, 'store'])->name('absen.store');
     Route::put('/absen-kerja/{id}/update', [AbsensiKerjaController::class, 'update'])->name('absen.update');
     Route::delete('/absen-kerja/{id}', [AbsensiKerjaController::class, 'destroy'])->name('absen.destroy');
+    Route::put('/absensi/{id}/update-waktu-selesai', [AbsensiKerjaController::class, 'updateWaktuSelesai']);
+
 });

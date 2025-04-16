@@ -77,4 +77,15 @@ class AbsensiKerjaController extends Controller
         $absensi->delete();
         return redirect()->route('absen.index')->with('success', 'Data berhasil dihapus');
     }
+
+    public function updateWaktuSelesai($id, Request $request)
+    {
+        $absensi = AbsensiKerja::findOrFail($id);
+
+        // Perbarui waktu selesai dengan waktu saat ini
+        $absensi->waktu_selesai_kerja = now();
+        $absensi->save(); 
+
+        return response()->json(['success' => true]);
+    }
 }
