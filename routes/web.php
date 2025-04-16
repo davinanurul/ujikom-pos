@@ -127,4 +127,6 @@ Route::middleware(['auth', CekUserRole::class])->group(function () {
     Route::get('/absen/export/pdf', [AbsensiKerjaController::class, 'exportPdf'])->name('absen.export.pdf');
     Route::get('/export-absensi', [AbsensiKerjaController::class, 'export'])->name('absensi.export');
     Route::post('/absen/import', [AbsensiKerjaController::class, 'import'])->name('absen.import');
+    Route::put('/absen-kerja/{id}/update-status', [AbsensiKerjaController::class, 'updateStatus'])->name('absen.update.status');
+    
 });

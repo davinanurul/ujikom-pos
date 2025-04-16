@@ -116,4 +116,32 @@ class AbsensiKerjaController extends Controller
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
+
+    public function updateStatus(Request $request, $id)
+    {
+        // Validasi input
+        $request->validate([
+            'status_masuk' => 'required|in:masuk,sakit,cuti',
+        ]);
+
+        // Temukan absensi berdasarkan id
+        $absensi = AbsensiKerja::findOrFail($id);
+
+        // Update status
+        $absensi->status_masuk = $request->status_masuk;
+
+        // Jika status sakit atau cuti, set waktu selesai kerja ke 00:00:00
+        if (in_array($request->status_masuk, ['sakit', 'cuti'])) {
+            $absensi->waktu_selesai_kerja = '00:00:00';
+        }
+
+        // Simpan perubahan
+        $absensi->save();
+
+        // Log status untuk memastikan data yang diterima
+        Log::info("Absensi ID: {$id} - Status masuk updated to: {$request->status_masuk}");
+
+        // Redirect kembali dengan pesan sukses
+        return back()->with('success', 'Status absensi berhasil diperbarui');
+    }
 }

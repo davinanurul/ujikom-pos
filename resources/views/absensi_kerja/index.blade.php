@@ -35,6 +35,7 @@
                                         <th class="text-center">Waktu Masuk</th>
                                         <th class="text-center">Status</th>
                                         <th class="text-center">Waktu Selesai</th>
+                                        <th class="text-center">Update Status</th>
                                         <th class="text-center">Aksi</th>
                                     </tr>
                                 </thead>
@@ -54,22 +55,57 @@
                                                         onclick="updateWaktuSelesai({{ $absensi->id }})">Selesai</button>
                                                 @endif
                                             </td>
-
                                             <td class="text-center">
-                                                <button class=" edit-btn btn btn-sm btn-success text-white"
-                                                    data-toggle="modal" data-target="#editAbsensiModal{{ $absensi->id }}">
-                                                    <i class="fa fa-edit"></i> Edit
-                                                </button>
-                                                <form action="{{ route('absen.destroy', $absensi->id) }}" method="POST"
-                                                    style="display: inline;">
+                                                <form action="{{ route('absen.update.status', $absensi->id) }}"
+                                                    method="POST" class="update-status-form">
                                                     @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit"class="btn btn-sm btn-danger text-white"
-                                                        onclick="return confirmDelete(event)">
-                                                        <i class="fa fa-trash text-white mr-1"></i>Delete
-                                                    </button>
+                                                    @method('PUT')
+                                                    <div class="basic-form mb-0">
+                                                        <div class="form-row align-items-center">
+                                                            <div class="col-auto my-1">
+                                                                <select name="status_masuk" class="custom-select mr-sm-2"
+                                                                    onchange="this.form.submit()" style="width: 60px;">
+                                                                    <option value="masuk"
+                                                                        {{ $absensi->status_masuk == 'masuk' ? 'selected' : '' }}>
+                                                                        Masuk</option>
+                                                                    <option value="sakit"
+                                                                        {{ $absensi->status_masuk == 'sakit' ? 'selected' : '' }}>
+                                                                        Sakit</option>
+                                                                    <option value="cuti"
+                                                                        {{ $absensi->status_masuk == 'cuti' ? 'selected' : '' }}>
+                                                                        Cuti</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </form>
                                             </td>
+                                            <td class="text-center">
+                                                <div class="dropdown">
+                                                    <button class="btn btn-sm btn-primary dropdown-toggle" type="button"
+                                                        id="dropdownMenuButton{{ $absensi->id }}" data-toggle="dropdown"
+                                                        aria-haspopup="true" aria-expanded="false">
+                                                        Aksi
+                                                    </button>
+                                                    <div class="dropdown-menu"
+                                                        aria-labelledby="dropdownMenuButton{{ $absensi->id }}">
+                                                        <a class="dropdown-item text-success" href="#"
+                                                            data-toggle="modal"
+                                                            data-target="#editAbsensiModal{{ $absensi->id }}">
+                                                            <i class="fa fa-edit mr-1"></i> Edit
+                                                        </a>
+                                                        <form action="{{ route('absen.destroy', $absensi->id) }}"
+                                                            method="POST" onsubmit="return confirmDelete(event);">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="dropdown-item text-danger">
+                                                                <i class="fa fa-trash mr-1"></i> Delete
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </td>
+
                                         </tr>
                                     @empty
                                         <tr>
