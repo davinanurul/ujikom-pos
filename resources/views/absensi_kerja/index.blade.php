@@ -14,6 +14,9 @@
                 <a href="{{ route('absensi.export') }}" class="btn btn-success">
                     <i class="fa fa-file-excel"></i> Export Excel
                 </a>
+                <a href="{{ asset('storage/template_absensi_kosong.xlsx') }}" class="btn btn-secondary">
+                    <i class="fa fa-download"></i> Template Impor
+                </a>
                 <button type="button" class="btn btn-primary text-white" data-toggle="modal"
                     data-target="#importAbsenKerjaModal">
                     <i class="fa fa-file mr-1"></i> Impor
