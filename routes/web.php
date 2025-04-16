@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AbsensiKerjaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\LoginController;
@@ -116,4 +117,10 @@ Route::middleware(['auth', CekUserRole::class])->group(function () {
     Route::get('/data-pengajuan', [PengajuanBarangController::class, 'getDataPengajuan']);
     Route::post('/pengajuan/{id}/update-terpenuhi', [PengajuanBarangController::class, 'updateTerpenuhi'])->name('pengajuan.updateTerpenuhi');
     Route::get('/pengajuan/export-pdf', [PengajuanBarangController::class, 'exportPDF'])->name('pengajuanBarang.exportPDF');
+
+    // Absensi Kerja
+    Route::get('/absen-kerja', [AbsensiKerjaController::class, 'index'])->name('absen.index');
+    Route::post('/absen-kerja/create', [AbsensiKerjaController::class, 'store'])->name('absen.store');
+    Route::put('/absen-kerja/{id}/update', [AbsensiKerjaController::class, 'update'])->name('absen.update');
+    Route::delete('/absen-kerja/{id}', [AbsensiKerjaController::class, 'destroy'])->name('absen.destroy');
 });
