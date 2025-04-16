@@ -120,11 +120,7 @@ Route::middleware(['auth', CekUserRole::class])->group(function () {
 
     // Absensi Kerja
     Route::get('/absen-kerja', [AbsensiKerjaController::class, 'index'])->name('absen.index');
-    Route::post('/absensi/store', [AbsensiKerjaController::class, 'store'])->name('absensi.store');
-    Route::put('/absen/{id}', [AbsensiKerjaController::class, 'update'])->name('absen.update');
-
-
-    // Route::post('/absen-kerja/create', [AbsensiKerjaController::class, 'store'])->name('absen.store');
-    // Route::put('/absen-kerja/{id}/update', [AbsensiKerjaController::class, 'update'])->name('absen.update');
+    Route::post('/absen-kerja/create', [AbsensiKerjaController::class, 'store'])->name('absen.store');
+    Route::put('/absen-kerja/{id}/update', [AbsensiKerjaController::class, 'update'])->name('absen.update');
     Route::delete('/absen-kerja/{id}', [AbsensiKerjaController::class, 'destroy'])->name('absen.destroy');
 });
