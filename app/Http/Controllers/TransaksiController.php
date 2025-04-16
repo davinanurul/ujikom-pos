@@ -21,11 +21,16 @@ use Mike42\Escpos\EscposImage;
 
 class TransaksiController extends Controller
 {
+    /**
+     * Menampilkan halaman daftar transaksi.
+     * Bisa difilter berdasarkan tanggal mulai dan selesai.
+     */
     public function index(Request $request)
     {
         $query = Transaksi::with(['user', 'member'])
             ->orderBy('created_at', 'desc');
 
+        // Filter tanggal jika diisi
         if ($request->filled('tanggal_mulai') && $request->filled('tanggal_selesai')) {
             $tanggalMulai = Carbon::parse($request->tanggal_mulai)->startOfDay();
             $tanggalSelesai = Carbon::parse($request->tanggal_selesai)->endOfDay();
@@ -38,17 +43,27 @@ class TransaksiController extends Controller
         return view('transaksi.index', compact('transaksi'));
     }
 
+    /**
+     * Menampilkan form input transaksi.
+     */
     public function create()
     {
+        // Hanya produk dengan stok > 0 yang ditampilkan
         $produks = Produk::whereHas('varian', function ($query) {
             $query->where('stok', '>', 0);
         })->get();
-        $members = Member::all();
+
+        $members = Member::all(); // Semua data member
+
         return view('transaksi.create', compact('produks', 'members'));
     }
 
+    /**
+     * Menyimpan data transaksi baru ke database.
+     */
     public function store(Request $request)
     {
+        // Validasi input
         $request->validate([
             'member_id' => 'nullable|exists:member,id',
             'pembayaran' => 'required|in:TUNAI,DEBIT,QRIS',
@@ -62,10 +77,11 @@ class TransaksiController extends Controller
             'bayar' => 'required|numeric|min:0',
         ]);
 
+        // Hilangkan karakter non-numeric
         $total = preg_replace('/[^\d]/', '', $request->total);
         $bayar = preg_replace('/[^\d]/', '', $request->bayar);
 
-        // Validasi jika bayar kurang dari total
+        // Validasi jumlah bayar
         if ($bayar < $total) {
             return response()->json([
                 'success' => false,
@@ -74,8 +90,11 @@ class TransaksiController extends Controller
         }
 
         $kembalian = $bayar - $total;
+
+        // Generate nomor transaksi otomatis
         $nomor_transaksi = Transaksi::generateNomorTransaksi();
 
+        // Simpan data utama transaksi
         $transaksi = Transaksi::create([
             'nomor_transaksi' => $nomor_transaksi,
             'tanggal' => now(),
@@ -87,6 +106,7 @@ class TransaksiController extends Controller
             'user_id' => Auth::id(),
         ]);
 
+        // Simpan detail transaksi per produk
         foreach ($request->produk_id as $index => $produk_id) {
             $varian = ProdukVarian::where([
                 'id_produk' => $produk_id,
@@ -103,12 +123,13 @@ class TransaksiController extends Controller
                     'subtotal' => preg_replace('/[^\d]/', '', $request->subtotal[$index]),
                 ]);
 
-                // Kurangi stok
+                // Update stok
                 $varian->stok -= $request->qty[$index];
                 $varian->save();
             }
         }
 
+        // Cetak struk ke printer fisik
         try {
             $connector = new WindowsPrintConnector("POS-58");
             $printer = new Printer($connector);
@@ -160,6 +181,9 @@ class TransaksiController extends Controller
         ]);
     }
 
+    /**
+     * Mengambil daftar warna berdasarkan produk tertentu.
+     */
     public function getVariansByProduk($produkId)
     {
         $warnaList = ProdukVarian::where('id_produk', $produkId)
@@ -171,6 +195,9 @@ class TransaksiController extends Controller
         return response()->json(['warna' => $warnaList]);
     }
 
+    /**
+     * Mengambil daftar size berdasarkan produk dan warna.
+     */
     public function getSizesByWarna($produkId, $warna)
     {
         $sizeList = ProdukVarian::where('id_produk', $produkId)
@@ -183,6 +210,9 @@ class TransaksiController extends Controller
         return response()->json(['sizes' => $sizeList]);
     }
 
+    /**
+     * Mengambil harga berdasarkan produk, warna, dan size.
+     */
     public function getHarga($produkId, $warna, $size)
     {
         $varian = ProdukVarian::where('id_produk', $produkId)
@@ -197,88 +227,52 @@ class TransaksiController extends Controller
         ]);
     }
 
+    /**
+     * Mengekspor laporan transaksi dalam bentuk PDF.
+     */
     public function exportPDF(Request $request)
     {
-        // Query data transaksi
         $query = Transaksi::with(['user', 'member'])
             ->orderBy('created_at', 'desc');
 
-        // Filter berdasarkan tanggal jika ada
         if ($request->filled('tanggal_mulai') && $request->filled('tanggal_selesai')) {
             $tanggalMulai = Carbon::parse($request->tanggal_mulai)->startOfDay();
             $tanggalSelesai = Carbon::parse($request->tanggal_selesai)->endOfDay();
-
             $query->whereBetween('tanggal', [$tanggalMulai, $tanggalSelesai]);
         }
 
-        // Ambil data transaksi
         $transaksi = $query->get();
 
-        // Data untuk PDF
         $data = [
             'transaksi' => $transaksi,
             'tanggal_mulai' => $request->tanggal_mulai,
             'tanggal_selesai' => $request->tanggal_selesai,
         ];
 
-        // Load view dan generate PDF
         $pdf = Pdf::loadView('transaksi.pdf', $data);
 
-        // Download PDF
         return $pdf->download('laporan-transaksi.pdf');
     }
 
+    /**
+     * Menampilkan detail transaksi berdasarkan ID.
+     */
     public function details($id)
     {
         $transaksi = Transaksi::findOrFail($id);
-        $detailTransaksi = $transaksi->detailTransaksi; // Ambil detail transaksi berdasarkan transaksi_id
+        $detailTransaksi = $transaksi->detailTransaksi;
 
         return view('transaksi.details', compact('transaksi', 'detailTransaksi'));
     }
 
+    /**
+     * Mengekspor laporan transaksi ke format Excel.
+     */
     public function export(Request $request)
     {
         $tanggalMulai = $request->tanggal_mulai;
         $tanggalSelesai = $request->tanggal_selesai;
 
         return Excel::download(new TransactionsExport($tanggalMulai, $tanggalSelesai), 'transactions.xlsx');
-    }
-
-    public function struk($id)
-    {
-        $transaksi = Transaksi::with('detailTransaksi')->findOrFail($id);
-
-        // Buat koneksi ke printer (nama printer harus sesuai dengan yang ada di Windows)
-        $connector = new WindowsPrintConnector("POS-80"); // Ganti dengan nama printer kamu
-        $printer = new Printer($connector);
-
-        // Contoh cetak struk
-        $printer->setJustification(Printer::JUSTIFY_CENTER);
-        $printer->text("Toko Ujikom\n");
-        $printer->text("Jl. Contoh Alamat\n");
-        $printer->feed();
-
-        $printer->setJustification(Printer::JUSTIFY_LEFT);
-        $printer->text("Tanggal: " . $transaksi->created_at->format('d-m-Y H:i') . "\n");
-        $printer->text("No Transaksi: #" . $transaksi->id . "\n");
-        $printer->text("--------------------------------\n");
-
-        foreach ($transaksi->detailTransaksi as $item) {
-            $line = sprintf("%-15s %5d x %5d\n", $item->produk->nama, $item->qty, $item->harga);
-            $printer->text($line);
-        }
-
-        $printer->text("--------------------------------\n");
-        $printer->setJustification(Printer::JUSTIFY_RIGHT);
-        $printer->text("Total: Rp " . number_format($transaksi->total, 0, ',', '.') . "\n");
-        $printer->feed(2);
-
-        $printer->setJustification(Printer::JUSTIFY_CENTER);
-        $printer->text("Terima kasih!\n");
-
-        $printer->cut();
-        $printer->close();
-
-        return back()->with('success', 'Struk berhasil dicetak.');
     }
 }

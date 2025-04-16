@@ -8,9 +8,17 @@
                 <a href="{{ route('supplier.create') }}" class="btn btn-primary">
                     <i class="fa fa-plus mr-1"></i> Tambah Supplier
                 </a>
-                <button class="btn btn-warning text-white" onclick="window.print();">
-                    <i class="fa fa-print text-white mr-1"></i>Ekspor
-                </button>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-warning text-white dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-download text-white mr-1"></i> Ekspor
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#" id="exportExcel"><i class="fa fa-file-excel mr-2 text-success"></i> Ekspor Excel</a>
+                        <a class="dropdown-item" href="{{ route('supplier.export.pdf') }}">
+                            <i class="fa fa-file-pdf mr-1"></i> Ekspor PDF
+                        </a>                        
+                    </div>
+                </div>     
                 <button type="button" class="btn btn-primary text-white" data-toggle="modal"
                     data-target="#importSupplierModal">
                     <i class="fa fa-file mr-1"></i> Impor

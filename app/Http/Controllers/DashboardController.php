@@ -12,23 +12,22 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
+    /**
+     * Menampilkan halaman dashboard dengan berbagai data statistik.
+     */
     public function index()
     {
-        // Hitung jumlah produk, supplier, dan member
         $produkCount = Produk::count();
         $supplierCount = Supplier::count();
         $memberCount = Member::count();
         $pengajuanBarangCount = PengajuanBarang::count();
 
-        // Hitung total pendapatan hari ini
         $totalPendapatanHariIni = Transaksi::whereDate('tanggal', now()->toDateString())
             ->sum('total');
 
-        // Hitung total pendapatan hari ini
         $stokTerjual = DetailTransaksi::whereDate('created_at', now()->toDateString())
             ->sum('qty');
 
-        // Kirim data ke Blade
         return view('dashboard', compact(
             'produkCount',
             'supplierCount',
@@ -39,11 +38,13 @@ class DashboardController extends Controller
         ));
     }
 
+    /**
+     * Mengambil data transaksi harian dalam format JSON untuk digunakan di grafik (Chart.js).
+     */
     public function getTransaksiHarian()
     {
         $transaksiHarian = Transaksi::getTransaksiHarian();
 
-        // Format data untuk Chart.js
         $labels = $transaksiHarian->pluck('tanggal');
         $jumlahTransaksi = $transaksiHarian->pluck('jumlah_transaksi');
         $totalPendapatan = $transaksiHarian->pluck('total_pendapatan');

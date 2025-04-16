@@ -1,46 +1,84 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pengajuan Barang</title>
+    <title>Daftar Pengajuan Barang</title>
     <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            font-size: 14px;
+            margin: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 20px;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 10px;
         }
-        table, th, td {
-            border: 1px solid black;
+
+        th,
+        td {
+            border: 1px solid #000;
+            padding: 10px;
+            text-align: center;
         }
-        th, td {
-            padding: 8px;
-            text-align: left;
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        td {
+            font-size: 14px;
         }
     </style>
 </head>
+
 <body>
-    <h1 style="text-align: center">Laporan Pengajuan Barang</h1>
+    <h2>Daftar Pengajuan Barang</h2>
+
     <table>
         <thead>
             <tr>
-                <th>Nama Pengaju</th>
-                <th>Nama Barang</th>
-                <th>Qty</th>
-                <th>Tanggal Pengajuan</th>
-                <th>Status</th>
+                <th style="text-align: center">No</th>
+                <th style="text-align: center">Nama Pengaju</th>
+                <th style="text-align: center">Nama Barang</th>
+                <th style="text-align: center">Tanggal Pengajuan</th>
+                <th style="text-align: center">Qty</th>
+                <th style="text-align: center">Status</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($pengajuans as $pengajuan)
+            @forelse ($pengajuans as $index => $pengajuan)
                 <tr>
-                    <td>{{ $pengajuan->nama_pengaju }}</td>
-                    <td>{{ $pengajuan->nama_barang }}</td>
-                    <td>{{ $pengajuan->qty }}</td>
-                    <td>{{ $pengajuan->tanggal_pengajuan }}</td>
-                    <td>{{ $pengajuan->terpenuhi ? 'Terpenuhi' : 'Belum Terpenuhi' }}</td>
+                    <td class="text-center">{{ $index + 1 }}</td>
+                    <td class="text-center">{{ $pengajuan->nama_pengaju }}</td>
+                    <td class="text-center">{{ $pengajuan->nama_barang }}</td>
+                    <td class="text-center">{{ $pengajuan->tanggal_pengajuan }}</td>
+                    <td class="text-center">{{ $pengajuan->qty }}</td>
+                    <td class="text-center">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="terpenuhiSwitch{{ $pengajuan->id }}"
+                                {{ $pengajuan->terpenuhi ? 'checked' : '' }}>
+                            <label class="custom-control-label" for="terpenuhiSwitch{{ $pengajuan->id }}"></label>
+                        </div>
+                    </td>
                 </tr>
-            @endforeach
+            @empty
+                <tr>
+                    <td colspan="7" class="text-center">Tidak ada data.</td>
+                </tr>
+            @endforelse
         </tbody>
     </table>
 </body>
+
 </html>

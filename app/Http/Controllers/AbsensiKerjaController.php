@@ -12,13 +12,18 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class AbsensiKerjaController extends Controller
 {
-
+    /**
+     * Menampilkan daftar semua data absensi.
+     */
     public function index()
     {
         $absensi = AbsensiKerja::orderBy('created_at', 'desc')->get();
         return view('absensi_kerja.index', compact('absensi'));
     }
 
+    /**
+     * Menyimpan data absensi baru ke database.
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -35,7 +40,7 @@ class AbsensiKerjaController extends Controller
             'status_masuk' => $request->status_masuk,
         ];
 
-        // Jika status sakit atau cuti, set waktu_selesai_kerja
+        // Jika status sakit atau cuti, waktu selesai kerja diset 00:00:00
         if (in_array($request->status_masuk, ['sakit', 'cuti'])) {
             $data['waktu_selesai_kerja'] = '00:00:00';
         }
@@ -45,7 +50,9 @@ class AbsensiKerjaController extends Controller
         return redirect()->back()->with('success', 'Data berhasil disimpan');
     }
 
-
+    /**
+     * Memperbarui data absensi berdasarkan ID.
+     */
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -64,6 +71,7 @@ class AbsensiKerjaController extends Controller
             'status_masuk' => $request->status_masuk,
         ]);
 
+        // Jika status sakit atau cuti, waktu selesai kerja diset 00:00:00
         if (in_array($request->status_masuk, ['sakit', 'cuti'])) {
             $absensi->waktu_selesai_kerja = '00:00:00';
         }
@@ -71,6 +79,9 @@ class AbsensiKerjaController extends Controller
         return redirect()->back()->with('success', 'Data berhasil di update');
     }
 
+    /**
+     * Menghapus data absensi berdasarkan ID.
+     */
     public function destroy(string $id)
     {
         $absensi = AbsensiKerja::findOrFail($id);
@@ -78,6 +89,9 @@ class AbsensiKerjaController extends Controller
         return redirect()->route('absen.index')->with('success', 'Data berhasil dihapus');
     }
 
+    /**
+     * Memperbarui waktu selesai kerja dengan waktu saat ini.
+     */
     public function updateWaktuSelesai($id, Request $request)
     {
         $absensi = AbsensiKerja::findOrFail($id);
@@ -88,6 +102,9 @@ class AbsensiKerjaController extends Controller
         return response()->json(['success' => true]);
     }
 
+    /**
+     * Mengekspor seluruh data absensi ke format PDF.
+     */
     public function exportPdf()
     {
         $absensi = AbsensiKerja::all();
@@ -96,18 +113,23 @@ class AbsensiKerjaController extends Controller
         return $pdf->download('laporan-absensi.pdf');
     }
 
+    /**
+     * Mengekspor seluruh data absensi ke format Excel.
+     */
     public function export()
     {
         return Excel::download(new AbsensiKerjaExport, 'absensi_kerja.xlsx');
     }
 
+    /**
+     * Mengimpor data absensi dari file Excel atau CSV.
+     */
     public function import(Request $request)
     {
         $request->validate([
             'file' => 'required|mimes:xlsx,xls,csv|max:2048',
         ]);
 
-        // Proses impor file
         try {
             Excel::import(new AbsensiImport, $request->file('file'));
             return redirect()->back()->with('success', 'Data absensi berhasil diimpor.');
@@ -116,6 +138,9 @@ class AbsensiKerjaController extends Controller
         }
     }
 
+    /**
+     * Memperbarui status kehadiran karyawan (masuk/sakit/cuti).
+     */
     public function updateStatus(Request $request, $id)
     {
         $request->validate([
@@ -126,7 +151,7 @@ class AbsensiKerjaController extends Controller
 
         $absensi->status_masuk = $request->status_masuk;
 
-        // Jika status sakit atau cuti, set waktu selesai kerja ke 00:00:00
+        // Jika status sakit atau cuti, waktu selesai kerja diset 00:00:00
         if (in_array($request->status_masuk, ['sakit', 'cuti'])) {
             $absensi->waktu_selesai_kerja = '00:00:00';
         }
@@ -135,7 +160,6 @@ class AbsensiKerjaController extends Controller
 
         Log::info("Absensi ID: {$id} - Status masuk updated to: {$request->status_masuk}");
 
- 
         return back()->with('success', 'Status absensi berhasil diperbarui');
     }
 }

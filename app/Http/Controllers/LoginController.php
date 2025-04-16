@@ -10,6 +10,9 @@ use App\Models\User;
 
 class LoginController extends Controller
 {
+    /**
+     * Menangani proses login user.
+     */
     public function login(Request $request)
     {
         // Validasi input user
@@ -50,6 +53,9 @@ class LoginController extends Controller
         return redirect()->route('dashboard');
     }
 
+    /**
+     * Menangani proses logout user.
+     */
     public function logout(Request $request)
     {
         // Logging logout

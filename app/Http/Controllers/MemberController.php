@@ -5,21 +5,32 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Member;
 use App\Imports\MemberImport;
+use App\Models\Kategori;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Maatwebsite\Excel\Facades\Excel;
 
 class MemberController extends Controller
 {
+    /**
+     * Menampilkan daftar semua member.
+     */
     public function index()
     {
         $members = Member::all();
         return view('member.index', compact('members'));
     }
 
+    /**
+     * Menampilkan form untuk membuat member baru.
+     */
     public function create()
     {
         return view('member.create');
     }
 
+    /**
+     * Menyimpan data member baru ke database.
+     */
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -36,13 +47,18 @@ class MemberController extends Controller
         return redirect()->route('member.index')->with('success', 'Member berhasil ditambahkan.');
     }
 
-
+    /**
+     * Menampilkan form edit untuk data member tertentu.
+     */
     public function edit($id)
     {
         $member = Member::findOrFail($id);
         return view('member.edit', compact('member'));
     }
 
+    /**
+     * Memperbarui data member yang sudah ada.
+     */
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -60,6 +76,9 @@ class MemberController extends Controller
         return redirect()->route('member.index')->with('success', 'Data member berhasil diperbarui.');
     }
 
+    /**
+     * Menonaktifkan status akun member.
+     */
     public function nonaktifkanAkun($memberId)
     {
         $member = Member::findOrFail($memberId);
@@ -69,6 +88,9 @@ class MemberController extends Controller
         return redirect()->route('member.index')->with('success', 'Member berhasil dinonaktifkan.');
     }
 
+    /**
+     * Mengaktifkan kembali akun member.
+     */
     public function aktifkanAkun($memberId)
     {
         $member = Member::findOrFail($memberId);
@@ -78,7 +100,9 @@ class MemberController extends Controller
         return redirect()->route('member.index')->with('success', 'Pengguna berhasil diaktifkan.');
     }
 
-    // Mengimpor data dari file Excel
+    /**
+     * Mengimpor data member dari file Excel.
+     */
     public function import(Request $request)
     {
         // Validasi file yang diunggah
@@ -91,5 +115,17 @@ class MemberController extends Controller
 
         // Redirect kembali setelah impor berhasil
         return redirect()->route('member.index')->with('success', 'Data member berhasil diimpor!');
+    }
+
+    /**
+     * Mengekspor data ke file pdf
+     */
+    public function exportPDF()
+    {
+        $members = Member::all();
+
+        $pdf = Pdf::loadView('member.pdf', compact('members'));
+
+        return $pdf->download('daftar_member.pdf');
     }
 }

@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Log;
 
 class PengajuanBarangController extends Controller
 {
+    // Menampilkan daftar pengajuan barang, dengan opsi filter berdasarkan tanggal
     public function index(Request $request)
     {
         $query = PengajuanBarang::orderBy('created_at', 'desc');
@@ -30,16 +31,19 @@ class PengajuanBarangController extends Controller
         return view('pengajuan_barang.index', compact('pengajuans', 'members'));
     }
 
+    // Menyimpan data pengajuan barang baru
     public function store(Request $request)
     {
         Log::info('Menyimpan pengajuan barang', $request->all());
 
+        // Validasi inputan
         $request->validate([
             'nama_pengaju' => 'required|string|max:255',
             'nama_barang' => 'required|string|max:255',
             'qty' => 'required|integer|min:1',
         ]);
 
+        // Cek apakah barang sudah tersedia di tabel penerimaan_barang
         $barangSudahDiterima = DB::table('penerimaan_barang')
             ->join('produk', 'penerimaan_barang.id_produk', '=', 'produk.id')
             ->where('produk.nama', $request->nama_barang)
@@ -51,6 +55,7 @@ class PengajuanBarangController extends Controller
                 ->with('error', 'Barang yang anda ajukan sudah tersedia!');
         }
 
+        // Simpan pengajuan barang ke database
         PengajuanBarang::create([
             'nama_pengaju' => $request->nama_pengaju,
             'nama_barang' => $request->nama_barang,
@@ -65,6 +70,7 @@ class PengajuanBarangController extends Controller
             ->with('success', 'Pengajuan barang berhasil ditambahkan!');
     }
 
+    // Mengecek apakah pengajuan sudah terpenuhi (barang tersedia di tabel produk)
     public function cekTerpenuhi()
     {
         Log::info('Cek status terpenuhi untuk pengajuan barang');
@@ -81,6 +87,7 @@ class PengajuanBarangController extends Controller
         return redirect()->route('pengajuanBarang.index')->with('success', 'Cek terpenuhi selesai!');
     }
 
+    // Memperbarui data pengajuan barang
     public function update(Request $request, $id)
     {
         Log::info('Memperbarui pengajuan barang', ['id' => $id, 'data' => $request->all()]);
@@ -100,6 +107,7 @@ class PengajuanBarangController extends Controller
         return redirect()->route('pengajuanBarang.index')->with('success', 'Pengajuan berhasil diperbarui!');
     }
 
+    // Menghapus data pengajuan barang
     public function destroy($id)
     {
         Log::info('Menghapus pengajuan barang', ['id' => $id]);
@@ -112,6 +120,7 @@ class PengajuanBarangController extends Controller
         return redirect()->route('pengajuanBarang.index')->with('success', 'Pengajuan berhasil dihapus!');
     }
 
+    // Mendapatkan data pengajuan untuk ditampilkan dalam chart (format JSON)
     public function getDataPengajuan()
     {
         Log::info('Mengambil data pengajuan untuk chart');
@@ -136,6 +145,19 @@ class PengajuanBarangController extends Controller
         ]);
     }
 
+    // Mengupdate status terpenuhi secara manual lewat request (biasanya via AJAX)
+    public function updateTerpenuhi(Request $request, $id)
+    {
+        $pengajuan = PengajuanBarang::findOrFail($id);
+        $pengajuan->terpenuhi = $request->terpenuhi;
+        $pengajuan->save();
+
+        return response()->json(['message' => 'Status berhasil diperbarui.']);
+    }
+
+    /**
+     * Mengekspor data pengajuan ke file pdf
+     */
     public function exportPDF(Request $request)
     {
         $query = PengajuanBarang::orderBy('created_at', 'desc');
@@ -152,14 +174,5 @@ class PengajuanBarangController extends Controller
 
         $pdf = Pdf::loadView('Pengajuan_barang.pdf', compact('pengajuans', 'members'));
         return $pdf->download('Pengajuan_barang.pdf');
-    }
-
-    public function updateTerpenuhi(Request $request, $id)
-    {
-        $pengajuan = PengajuanBarang::findOrFail($id);
-        $pengajuan->terpenuhi = $request->terpenuhi;
-        $pengajuan->save();
-
-        return response()->json(['message' => 'Status berhasil diperbarui.']);
     }
 }

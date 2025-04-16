@@ -16,12 +16,10 @@
                         <i class="fa fa-print text-white mr-1"></i> Export
                     </button>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="exportDropdown">
-                        <a class="dropdown-item" href="#" id="exportExcel">
-                            <i class="fas fa-file-excel text-success"></i> Export Excel
-                        </a>
-                        <a class="dropdown-item" href="{{ route('pengajuanBarang.exportPDF') }}" id="exportPDF">
-                            <i class="fas fa-file-pdf text-danger"></i> Export PDF
-                        </a>
+                        <a href="{{ route('pengajuan.export.pdf') }}" class="dropdown-item">
+                            <i class="fas fa-file-excel"></i> Export PDF
+                        </a>                                              
+                        <li><a class="dropdown-item" href="{{ route('pengajuan.export.excel') }}">Export Excel</a></li>
                     </div>
                 </div>
             </div>
@@ -149,7 +147,7 @@
 
     <!-- Modal Edit Kategori -->
     <div class="modal fade" id="editKategoriModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-lg" role="document"> 
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Edit Pengajuan Barang</h5>

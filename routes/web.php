@@ -44,6 +44,7 @@ Route::middleware(['auth', CekUserRole::class])->group(function () {
     Route::post('user', [UserController::class, 'store'])->name('user.store');
     Route::get('/nonaktifkan-akun/{userId}', [UserController::class, 'nonaktifkanAkun'])->name('user.nonaktifkan');
     Route::get('/aktifkan-akun/{userId}', [UserController::class, 'aktifkanAkun'])->name('user.aktifkan');
+    Route::get('/user/export/pdf', [UserController::class, 'exportPDF'])->name('user.export.pdf');
 
     // Member
     Route::get('member', [MemberController::class, 'index'])->name('member.index');
@@ -54,6 +55,7 @@ Route::middleware(['auth', CekUserRole::class])->group(function () {
     Route::get('/nonaktifkan-member/{memberId}', [MemberController::class, 'nonaktifkanAkun'])->name('member.nonaktifkan');
     Route::get('/aktifkan-member/{memberId}', [MemberController::class, 'aktifkanAkun'])->name('member.aktifkan');
     Route::post('member/import', [MemberController::class, 'import'])->name('member.import');
+    Route::get('/member/export/pdf', [MemberController::class, 'exportPDF'])->name('member.export.pdf');
 
     // Kategori
     Route::get('kategori', [KategoriController::class, 'index'])->name('kategori.index');
@@ -61,6 +63,7 @@ Route::middleware(['auth', CekUserRole::class])->group(function () {
     Route::put('kategori/{id}', [KategoriController::class, 'update'])->name('kategori.update');
     Route::post('/kategori/import', [KategoriController::class, 'import'])->name('kategori.import');
     Route::get('/kategori/{id}/edit', [KategoriController::class, 'edit'])->name('kategori.edit');
+    Route::get('/kategori/export/pdf', [KategoriController::class, 'exportPDF'])->name('kategori.export.pdf');
 
     // Supplier
     Route::get('supplier', [SupplierController::class, 'index'])->name('supplier.index');
@@ -69,6 +72,7 @@ Route::middleware(['auth', CekUserRole::class])->group(function () {
     Route::get('supplier/{id}/edit', [SupplierController::class, 'edit'])->name('supplier.edit');
     Route::put('/supplier/{id}', [SupplierController::class, 'update'])->name('supplier.update');
     Route::post('/supplier/import', [SupplierController::class, 'import'])->name('supplier.import');
+    Route::get('/supplier/export/pdf', [SupplierController::class, 'exportPDF'])->name('supplier.export.pdf');
 
     // Produk
     Route::get('produk', [ProdukController::class, 'index'])->name('produk.index');
