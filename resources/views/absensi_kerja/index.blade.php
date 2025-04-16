@@ -105,8 +105,70 @@
                                                     </div>
                                                 </div>
                                             </td>
-
                                         </tr>
+
+                                        <!-- Modal Edit Data -->
+                                        <div class="modal fade" id="editAbsensiModal{{ $absensi->id }}" tabindex="-1"
+                                            role="dialog">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Edit Data Absensi Kerja</h5>
+                                                    </div>
+                                                    <form action="{{ route('absen.update', $absensi->id) }}"
+                                                        method="POST">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <div class="modal-body">
+                                                            <div class="form-group">
+                                                                <label>Nama Karyawan</label>
+                                                                <input type="text" class="form-control"
+                                                                    name="nama_karyawan"
+                                                                    value="{{ old('nama_karyawan', $absensi->nama_karyawan) }}"
+                                                                    required>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label>Tanggal Masuk</label>
+                                                                <input type="date" class="form-control"
+                                                                    name="tanggal_masuk"
+                                                                    value="{{ old('tanggal_masuk', $absensi->tanggal_masuk) }}"
+                                                                    required>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label>Waktu Masuk</label>
+                                                                <input type="time" class="form-control"
+                                                                    name="waktu_masuk"
+                                                                    value="{{ old('waktu_masuk', $absensi->waktu_masuk) }}">
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label>Status Masuk</label>
+                                                                <select name="status_masuk" class="form-control" required>
+                                                                    <option value="masuk"
+                                                                        {{ old('status_masuk', $absensi->status_masuk) == 'masuk' ? 'selected' : '' }}>
+                                                                        Masuk</option>
+                                                                    <option value="sakit"
+                                                                        {{ old('status_masuk', $absensi->status_masuk) == 'sakit' ? 'selected' : '' }}>
+                                                                        Sakit</option>
+                                                                    <option value="cuti"
+                                                                        {{ old('status_masuk', $absensi->status_masuk) == 'cuti' ? 'selected' : '' }}>
+                                                                        Cuti</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-light"
+                                                                data-dismiss="modal">Batal</button>
+                                                            <button type="submit" class="btn btn-primary">Simpan
+                                                                Perubahan</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
                                     @empty
                                         <tr>
                                             <td colspan="7" class="text-center">Tidak ada data.</td>
@@ -131,25 +193,21 @@
                 <form action="{{ route('absen.store') }}" method="POST">
                     @csrf
                     <div class="modal-body">
-                        <!-- Nama Karyawan -->
                         <div class="form-group">
                             <label>Nama Karyawan</label>
                             <input type="text" class="form-control" name="nama_karyawan" required>
                         </div>
 
-                        <!-- Tanggal Masuk -->
                         <div class="form-group">
                             <label>Tanggal Masuk</label>
                             <input type="date" class="form-control" name="tanggal_masuk" required>
                         </div>
 
-                        <!-- Waktu Masuk -->
                         <div class="form-group">
                             <label>Waktu Masuk</label>
                             <input type="time" class="form-control" name="waktu_masuk">
                         </div>
 
-                        <!-- Status Masuk -->
                         <div class="form-group">
                             <label>Status Masuk</label>
                             <select name="status_masuk" class="form-control" required>
@@ -169,63 +227,7 @@
     </div>
 
 
-    <!-- Modal Edit Data -->
-    <div class="modal fade" id="editAbsensiModal{{ $absensi->id }}" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Edit Data Absensi Kerja</h5>
-                </div>
-                <form action="{{ route('absen.update', $absensi->id) }}" method="POST">
-                    @csrf
-                    @method('PUT')
-                    <div class="modal-body">
-                        {{-- Nama Karyawan --}}
-                        <div class="form-group">
-                            <label>Nama Karyawan</label>
-                            <input type="text" class="form-control" name="nama_karyawan"
-                                value="{{ old('nama_karyawan', $absensi->nama_karyawan) }}" required>
-                        </div>
 
-                        {{-- Tanggal Masuk --}}
-                        <div class="form-group">
-                            <label>Tanggal Masuk</label>
-                            <input type="date" class="form-control" name="tanggal_masuk"
-                                value="{{ old('tanggal_masuk', $absensi->tanggal_masuk) }}" required>
-                        </div>
-
-                        {{-- Waktu Masuk --}}
-                        <div class="form-group">
-                            <label>Waktu Masuk</label>
-                            <input type="time" class="form-control" name="waktu_masuk"
-                                value="{{ old('waktu_masuk', $absensi->waktu_masuk) }}">
-                        </div>
-
-                        {{-- Status Masuk --}}
-                        <div class="form-group">
-                            <label>Status Masuk</label>
-                            <select name="status_masuk" class="form-control" required>
-                                <option value="masuk"
-                                    {{ old('status_masuk', $absensi->status_masuk) == 'masuk' ? 'selected' : '' }}>Masuk
-                                </option>
-                                <option value="sakit"
-                                    {{ old('status_masuk', $absensi->status_masuk) == 'sakit' ? 'selected' : '' }}>Sakit
-                                </option>
-                                <option value="cuti"
-                                    {{ old('status_masuk', $absensi->status_masuk) == 'cuti' ? 'selected' : '' }}>Cuti
-                                </option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light" data-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 
     <!-- Modal Import Excel -->
     <div class="modal fade" id="importAbsenKerjaModal" tabindex="-1" role="dialog"
