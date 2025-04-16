@@ -2,21 +2,28 @@
 
 namespace App\Imports;
 
-use App\Models\Absensi;
 use App\Models\AbsensiKerja;
 use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
+use Carbon\Carbon;
 
-class AbsensiImport implements ToModel
+class AbsensiImport implements ToModel, WithHeadingRow
 {
     public function model(array $row)
     {
+        // Cek apakah nilai tanggal angka
+        if (is_numeric($row['tanggal_masuk'])) {
+            $tanggalMasuk = Date::excelToDateTimeObject($row['tanggal_masuk'])->format('Y-m-d');
+        } else {
+            $tanggalMasuk = Carbon::parse($row['tanggal_masuk'])->format('Y-m-d');
+        }
+
         return new AbsensiKerja([
-            'nama_karyawan' => $row[0], // Kolom pertama adalah nama karyawan
-            'tanggal_masuk' => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[1])->format('Y-m-d'), // Kolom kedua adalah tanggal masuk
-            'waktu_masuk' => $row[2], // Kolom ketiga adalah waktu masuk
-            'status_masuk' => $row[3], // Kolom keempat adalah status masuk
-            // Tambahkan kolom lain yang sesuai dengan struktur file Excel yang kamu miliki
+            'nama_karyawan' => $row['nama_karyawan'],
+            'tanggal_masuk' => $tanggalMasuk,
+            'waktu_masuk' => $row['waktu_masuk'],
+            'status_masuk' => $row['status_masuk'],
         ]);
     }
 }
-
