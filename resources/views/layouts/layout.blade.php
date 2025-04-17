@@ -319,7 +319,7 @@
                 {{-- Absensi Kerja --}}
                 @if (in_array(Auth::user()->user_hak, ['admin', 'kasir', 'owner']))
                 <li>
-                    <a href="{{ route('absen.index') }}"><i class="icon-people menu-icon"></i><span class="nav-text">Absensi Kerja</span>
+                    <a href="{{ route('absen.index') }}"><i class="ti-check-box menu-icon"></i> <span class="nav-text">Absensi Kerja</span>
                     </a>
                 </li>
                 @endif

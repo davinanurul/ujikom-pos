@@ -17,7 +17,7 @@ class MemberController extends Controller
      */
     public function index()
     {
-        $members = Member::all();
+        $members = Member::orderBy('created_at', 'desc')->get();
         return view('member.index', compact('members'));
     }
 

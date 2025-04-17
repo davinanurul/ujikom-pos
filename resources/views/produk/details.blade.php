@@ -3,7 +3,7 @@
 @section('content')
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4 class="mb-0"><i class="fa fa-truck text-primary mr-2"></i> Data Produk</h4>
+            <h4 class="mb-0"><i class="fa fa-truck text-primary mr-2"></i> Data Detail Produk</h4>
             <div>
                 <a href="{{ route('produk_varian.create') }}" class="btn btn-primary">
                     <i class="fa fa-plus mr-1"></i> Tambah
