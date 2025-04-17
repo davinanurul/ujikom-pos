@@ -1,84 +1,41 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-    <title>Daftar Pengajuan Barang</title>
+    <title>Export PDF - Pengajuan Barang</title>
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            font-size: 14px;
-            margin: 20px;
-        }
-
-        h2 {
-            text-align: center;
-            font-size: 20px;
-            margin-bottom: 30px;
-            text-transform: uppercase;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-
-        th,
-        td {
-            border: 1px solid #000;
-            padding: 10px;
-            text-align: center;
-        }
-
-        th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-            font-size: 15px;
-        }
-
-        td {
-            font-size: 14px;
-        }
+        body { font-family: sans-serif; font-size: 12px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #000; padding: 6px; text-align: left; }
+        th { background-color: #eee; }
     </style>
 </head>
-
 <body>
-    <h2>Daftar Pengajuan Barang</h2>
+    <h2>Laporan Pengajuan Barang</h2>
+    <p>Tanggal Cetak: {{ \Carbon\Carbon::now()->format('d-m-Y H:i') }}</p>
 
     <table>
         <thead>
             <tr>
-                <th style="text-align: center">No</th>
-                <th style="text-align: center">Nama Pengaju</th>
-                <th style="text-align: center">Nama Barang</th>
-                <th style="text-align: center">Tanggal Pengajuan</th>
-                <th style="text-align: center">Qty</th>
-                <th style="text-align: center">Status</th>
+                <th>No</th>
+                <th>Nama Pengaju</th>
+                <th>Nama Barang</th>
+                <th>Qty</th>
+                <th>Tanggal Pengajuan</th>
+                <th>Status</th>
             </tr>
         </thead>
         <tbody>
-            @forelse ($pengajuans as $index => $pengajuan)
+            @foreach ($pengajuans as $index => $item)
                 <tr>
-                    <td class="text-center">{{ $index + 1 }}</td>
-                    <td class="text-center">{{ $pengajuan->nama_pengaju }}</td>
-                    <td class="text-center">{{ $pengajuan->nama_barang }}</td>
-                    <td class="text-center">{{ $pengajuan->tanggal_pengajuan }}</td>
-                    <td class="text-center">{{ $pengajuan->qty }}</td>
-                    <td class="text-center">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" class="custom-control-input" id="terpenuhiSwitch{{ $pengajuan->id }}"
-                                {{ $pengajuan->terpenuhi ? 'checked' : '' }}>
-                            <label class="custom-control-label" for="terpenuhiSwitch{{ $pengajuan->id }}"></label>
-                        </div>
-                    </td>
+                    <td>{{ $index + 1 }}</td>
+                    <td>{{ $item->nama_pengaju }}</td>
+                    <td>{{ $item->nama_barang }}</td>
+                    <td>{{ $item->qty }}</td>
+                    <td>{{ \Carbon\Carbon::parse($item->tanggal_pengajuan)->format('d-m-Y') }}</td>
+                    <td>{{ $item->terpenuhi ? 'Terpenuhi' : 'Belum Terpenuhi' }}</td>
                 </tr>
-            @empty
-                <tr>
-                    <td colspan="7" class="text-center">Tidak ada data.</td>
-                </tr>
-            @endforelse
+            @endforeach
         </tbody>
     </table>
 </body>
-
 </html>

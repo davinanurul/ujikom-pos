@@ -3,39 +3,25 @@
 @section('content')
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <div class="d-flex align-items-center">
-                <!-- Tombol "Buat Pengajuan Barang" -->
+            <h4 class="mb-0"><i class="fa fa-tags text-primary mr-2"></i> Pengajuan Barang</h4>
+            <div>
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#pengajuanBarangModal">
                     <i class="fa fa-plus mr-1"></i>Buat Pengajuan
                 </button>
-
-                <!-- Dropdown Export -->
-                <div class="dropdown ml-2">
-                    <button class="btn btn-warning dropdown-toggle text-white" type="button" id="exportDropdown"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fa fa-print text-white mr-1"></i> Export
+                <div class="btn-group">
+                    <button type="button" class="btn btn-warning text-white dropdown-toggle" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-download text-white mr-1"></i> Ekspor
                     </button>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="exportDropdown">
-                        <a href="{{ route('pengajuan.export.pdf') }}" class="dropdown-item">
-                            <i class="fas fa-file-excel"></i> Export PDF
-                        </a>                                              
-                        <li><a class="dropdown-item" href="{{ route('pengajuan.export.excel') }}">Export Excel</a></li>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="{{ route('pengajuanBarang.exportExcel') }}">
+                            Export ke Excel
+                        </a>
+                        <a class="dropdown-item" href="{{ route('pengajuanBarang.exportPdf') }}">
+                            Export ke PDF
+                        </a>
                     </div>
                 </div>
-            </div>
-
-            <!-- Grup Filter dan Export -->
-            <div class="d-flex align-items-center gap-3">
-                <!-- Form Filter -->
-                <form method="GET" action="{{ route('pengajuanBarang.index') }}" class="d-flex gap-3">
-                    <input type="date" name="tanggal_mulai" class="form-control form-control-sm"
-                        value="{{ request('tanggal_mulai') }}">
-                    <input type="date" name="tanggal_selesai" class="form-control form-control-sm"
-                        value="{{ request('tanggal_selesai') }}">
-                    <button type="submit" class="btn btn-primary rounded-0">Filter</button>
-                    <button type="button" class="btn btn-secondary rounded-0 text-white"
-                        onclick="window.location='{{ route('pengajuanBarang.index') }}'">Reset</button>
-                </form>
             </div>
         </div>
         <!-- DataTales Example -->
@@ -191,106 +177,6 @@
     </div>
 @endsection
 @push('script')
-    <!-- DataTables CSS (Bootstrap 4) -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap4.min.css">
-
-    <!-- DataTables JS -->
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap4.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
-    <!-- SweetAlert2 CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    <!-- SweetAlert2 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-
-    <script>
-        $(document).ready(function() {
-            var table = $('#pengajuanTable').DataTable({
-                dom: "<'row'<'col-md-6'l><'col-md-6'f>>" +
-                    "<'row'<'col-sm-12'tr>>" +
-                    "<'row'<'col-md-6'i><'col-md-6'p>>",
-                buttons: [{
-                        extend: 'excelHtml5',
-                        className: 'btn btn-success',
-                        title: 'Pengajuan-Barang',
-                        exportOptions: {
-                            columns: [0, 1, 2, 3, 4, 5],
-                            format: {
-                                body: function(data, row, column, node) {
-                                    // Cek kolom ke-5 (index 5) untuk status Terpenuhi
-                                    if (column === 5) {
-                                        // Cek apakah switch dalam keadaan checked atau tidak
-                                        return $(node).find('input[type="checkbox"]').is(
-                                            ':checked') ? 'Terpenuhi' : 'Belum Terpenuhi';
-                                    }
-                                    return data;
-                                }
-                            }
-                        }
-                    },
-                    {
-                        extend: 'pdfHtml5',
-                        className: 'btn btn-danger',
-                        title: 'Pengajuan-Barang',
-                        exportOptions: {
-                            columns: [0, 1, 2, 3, 4, 5],
-                            format: {
-                                body: function(data, row, column, node) {
-                                    if (column === 5) {
-                                        return $(node).find('input[type="checkbox"]').is(
-                                            ':checked') ? 'Terpenuhi' : 'Belum Terpenuhi';
-                                    }
-                                    return data;
-                                }
-                            }
-                        }
-                    },
-                    {
-                        extend: 'print',
-                        className: 'btn btn-primary',
-                        title: 'Pengajuan-Barang',
-                        exportOptions: {
-                            columns: [0, 1, 2, 3, 4, 5],
-                            format: {
-                                body: function(data, row, column, node) {
-                                    if (column === 5) {
-                                        return $(node).find('input[type="checkbox"]').is(
-                                            ':checked') ? 'Terpenuhi' : 'Belum Terpenuhi';
-                                    }
-                                    return data;
-                                }
-                            }
-                        }
-                    }
-                ],
-                responsive: true,
-                lengthChange: true,
-                autoWidth: false,
-                pagingType: "simple_numbers",
-                language: {
-                    url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/Indonesian.json"
-                }
-            });
-
-            // Tombol Export Khusus Tabel Ini
-            $('#exportExcel').click(function() {
-                table.button(0).trigger();
-            });
-
-            $('#exportPDF').click(function() {
-                table.button(1).trigger();
-            });
-        });
-    </script>
-
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(document).ready(function() {

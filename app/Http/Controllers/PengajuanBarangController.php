@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\PengajuanBarangExport;
 use App\Models\Member;
 use App\Models\PengajuanBarang;
 use App\Models\Produk;
@@ -10,6 +11,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Collection;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class PengajuanBarangController extends Controller
 {
@@ -155,24 +159,19 @@ class PengajuanBarangController extends Controller
         return response()->json(['message' => 'Status berhasil diperbarui.']);
     }
 
-    /**
-     * Mengekspor data pengajuan ke file pdf
-     */
-    public function exportPDF(Request $request)
+    // Expor data ke Excel
+    public function exportExcel()
     {
-        $query = PengajuanBarang::orderBy('created_at', 'desc');
+        return Excel::download(new PengajuanBarangExport, 'pengajuan_barang.xlsx');
+    }
 
-        if ($request->filled('tanggal_mulai') && $request->filled('tanggal_selesai')) {
-            $tanggalMulai = Carbon::parse($request->tanggal_mulai)->startOfDay();
-            $tanggalSelesai = Carbon::parse($request->tanggal_selesai)->endOfDay();
+    // Expor data ke PDF
+    public function exportPdf()
+    {
+        $pengajuans = PengajuanBarang::orderBy('created_at', 'desc')->get();
 
-            $query->whereBetween('created_at', [$tanggalMulai, $tanggalSelesai]);
-        }
+        $pdf = Pdf::loadView('pengajuan_barang.pdf', compact('pengajuans'));
 
-        $pengajuans = $query->get();
-        $members = Member::all();
-
-        $pdf = Pdf::loadView('Pengajuan_barang.pdf', compact('pengajuans', 'members'));
-        return $pdf->download('Pengajuan_barang.pdf');
+        return $pdf->download('pengajuan_barang.pdf');
     }
 }

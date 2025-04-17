@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\SupplierExport;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 use App\Imports\SupplierImport;
@@ -83,11 +84,18 @@ class SupplierController extends Controller
         }
     }
 
+    // Mengekspor data ke pdf
     public function exportPDF()
     {
         $suppliers = Supplier::all();
 
         $pdf = Pdf::loadView('supplier.pdf', compact('suppliers'));
         return $pdf->download('daftar_supplier.pdf');
+    }
+
+    // Mengekspor data ke excel
+    public function exportExcel()
+    {
+        return Excel::download(new SupplierExport, 'daftar_supplier.xlsx');
     }
 }

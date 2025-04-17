@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\MemberExport;
 use Illuminate\Http\Request;
 use App\Models\Member;
 use App\Imports\MemberImport;
@@ -127,5 +128,13 @@ class MemberController extends Controller
         $pdf = Pdf::loadView('member.pdf', compact('members'));
 
         return $pdf->download('daftar_member.pdf');
+    }
+
+    /**
+     * Mengekspor data ke file excel/xls
+     */
+    public function exportExcel()
+    {
+        return Excel::download(new MemberExport, 'daftar_member.xlsx');
     }
 }

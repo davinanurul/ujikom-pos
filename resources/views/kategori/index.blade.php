@@ -13,12 +13,12 @@
                         <i class="fa fa-download text-white mr-1"></i> Ekspor
                     </button>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#" id="exportExcel"><i class="fa fa-file-excel mr-2 text-success"></i> Ekspor Excel</a>
-                        <a class="dropdown-item" href="{{ route('kategori.export.pdf') }}" class="btn btn-danger">
-                            <i class="fa fa-file-pdf mr-1"></i> Ekspor PDF
-                        </a>
+                        <a class="dropdown-item" href="{{ route('kategori.exportExcel') }}">Export Excel</a>
+                        <a class="dropdown-item" href="{{ route('kategori.export.pdf') }}">
+                            <i class="fas fa-file-pdf"></i> Export PDF
+                        </a>                                            
                     </div>
-                </div>                
+                </div> 
                 <button type="button" class="btn btn-primary text-white" data-toggle="modal"
                     data-target="#importKategoriModal">
                     <i class="fa fa-file mr-1"></i> Impor

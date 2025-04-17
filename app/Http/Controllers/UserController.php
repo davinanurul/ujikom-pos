@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\UserExport;
 use App\Models\Supplier;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
 
 class UserController extends Controller
 {
@@ -103,11 +105,18 @@ class UserController extends Controller
         return redirect()->route('user.index')->with('success', 'Pengguna berhasil diaktifkan');
     }
 
+    // Expor data ke pdf
     public function exportPDF()
-{
-    $suppliers = Supplier::all();
+    {
+        $suppliers = Supplier::all();
 
-    $pdf = Pdf::loadView('supplier.pdf', compact('suppliers'));
-    return $pdf->download('daftar_supplier.pdf');
-}
+        $pdf = Pdf::loadView('supplier.pdf', compact('suppliers'));
+        return $pdf->download('daftar_supplier.pdf');
+    }
+
+    // Expor data ke excel/xls
+    public function exportExcel()
+    {
+        return Excel::download(new UserExport, 'daftar_pengguna.xlsx');
+    }
 }

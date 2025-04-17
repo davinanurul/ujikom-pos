@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\KategoriExport;
 use App\Models\Kategori;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -110,5 +111,11 @@ class KategoriController extends Controller
         $pdf = Pdf::loadView('kategori.pdf', compact('data'));
 
         return $pdf->download('kategori-produk.pdf');
+    }
+
+    // Expor data ke excel/xls
+    public function exportExcel()
+    {
+        return Excel::download(new KategoriExport, 'kategori-produk.xlsx');
     }
 }

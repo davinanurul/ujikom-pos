@@ -45,6 +45,7 @@ Route::middleware(['auth', CekUserRole::class])->group(function () {
     Route::get('/nonaktifkan-akun/{userId}', [UserController::class, 'nonaktifkanAkun'])->name('user.nonaktifkan');
     Route::get('/aktifkan-akun/{userId}', [UserController::class, 'aktifkanAkun'])->name('user.aktifkan');
     Route::get('/user/export/pdf', [UserController::class, 'exportPDF'])->name('user.export.pdf');
+    Route::get('/user/export/excel', [UserController::class, 'exportExcel'])->name('user.export.excel');
 
     // Member
     Route::get('member', [MemberController::class, 'index'])->name('member.index');
@@ -56,6 +57,7 @@ Route::middleware(['auth', CekUserRole::class])->group(function () {
     Route::get('/aktifkan-member/{memberId}', [MemberController::class, 'aktifkanAkun'])->name('member.aktifkan');
     Route::post('member/import', [MemberController::class, 'import'])->name('member.import');
     Route::get('/member/export/pdf', [MemberController::class, 'exportPDF'])->name('member.export.pdf');
+    Route::get('/member/export/excel', [MemberController::class, 'exportExcel'])->name('member.export.excel');
 
     // Kategori
     Route::get('kategori', [KategoriController::class, 'index'])->name('kategori.index');
@@ -64,6 +66,7 @@ Route::middleware(['auth', CekUserRole::class])->group(function () {
     Route::post('/kategori/import', [KategoriController::class, 'import'])->name('kategori.import');
     Route::get('/kategori/{id}/edit', [KategoriController::class, 'edit'])->name('kategori.edit');
     Route::get('/kategori/export/pdf', [KategoriController::class, 'exportPDF'])->name('kategori.export.pdf');
+    Route::get('/kategori/export/excel', [KategoriController::class, 'exportExcel'])->name('kategori.exportExcel');
 
     // Supplier
     Route::get('supplier', [SupplierController::class, 'index'])->name('supplier.index');
@@ -73,6 +76,7 @@ Route::middleware(['auth', CekUserRole::class])->group(function () {
     Route::put('/supplier/{id}', [SupplierController::class, 'update'])->name('supplier.update');
     Route::post('/supplier/import', [SupplierController::class, 'import'])->name('supplier.import');
     Route::get('/supplier/export/pdf', [SupplierController::class, 'exportPDF'])->name('supplier.export.pdf');
+    Route::get('/supplier/export/excel', [SupplierController::class, 'exportExcel'])->name('supplier.export.excel');
 
     // Produk
     Route::get('produk', [ProdukController::class, 'index'])->name('produk.index');
@@ -120,7 +124,8 @@ Route::middleware(['auth', CekUserRole::class])->group(function () {
     Route::delete('/pengajuan-barang/{id}', [PengajuanBarangController::class, 'destroy'])->name('pengajuanBarang.destroy');
     Route::get('/data-pengajuan', [PengajuanBarangController::class, 'getDataPengajuan']);
     Route::post('/pengajuan/{id}/update-terpenuhi', [PengajuanBarangController::class, 'updateTerpenuhi'])->name('pengajuan.updateTerpenuhi');
-    Route::get('/pengajuan/export-pdf', [PengajuanBarangController::class, 'exportPDF'])->name('pengajuanBarang.exportPDF');
+    Route::get('/pengajuan-barang/export-excel', [PengajuanBarangController::class, 'exportExcel'])->name('pengajuanBarang.exportExcel');
+    Route::get('/pengajuan-barang/export-pdf', [PengajuanBarangController::class, 'exportPdf'])->name('pengajuanBarang.exportPdf');
 
     // Absensi Kerja
     Route::get('/absen-kerja', [AbsensiKerjaController::class, 'index'])->name('absen.index');
@@ -132,5 +137,4 @@ Route::middleware(['auth', CekUserRole::class])->group(function () {
     Route::get('/export-absensi', [AbsensiKerjaController::class, 'export'])->name('absensi.export');
     Route::post('/absen/import', [AbsensiKerjaController::class, 'import'])->name('absen.import');
     Route::put('/absen-kerja/{id}/update-status', [AbsensiKerjaController::class, 'updateStatus'])->name('absen.update.status');
-    
 });
